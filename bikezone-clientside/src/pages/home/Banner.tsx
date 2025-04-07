@@ -5,23 +5,29 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 
-
 // import required modules
 import { Navigation } from "swiper/modules";
 
 const Banner = () => {
   return (
     <>
-      <Swiper navigation={true} modules={[Navigation]} className="mySwiper h-[80vh]">
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide>
+      <Swiper navigation={true} modules={[Navigation]} className="">
+        <SwiperSlide className="w-full h-screen bg-amber-100">
+          <div>
+            <img
+              src="https://s3-ap-southeast-2.amazonaws.com/imotor-cms/images_cms/240034_wm-bmw-banner-june23-hqn.jpg"
+              alt="banner 1" className="object-center object-cover"
+            />
+          </div>
+        </SwiperSlide>
+        <SwiperSlide className="w-full h-screen bg-amber-100">
+          <div>
+            <img
+              src="https://s3-ap-southeast-2.amazonaws.com/imotor-cms/images_cms/240036_wm-bmw2-banner-june23-hqn.jpg"
+              alt="banner 1" className="object-center object-cover"
+            />
+          </div>
+        </SwiperSlide>
       </Swiper>
     </>
   );
