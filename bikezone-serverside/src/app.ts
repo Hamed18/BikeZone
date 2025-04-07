@@ -1,8 +1,8 @@
-import cors from 'cors';
-import express, { Application, Request, Response } from 'express';
+import cors from "cors";
+import express, { Application, Request, Response } from "express";
 
-import { globalErrorHandler } from './app/middleeatres/globalErrorHandler';
-
+import { globalErrorHandler } from "./app/middleeatres/globalErrorHandler";
+import productRouter from "./app/modules/product/product.router";
 
 const app: Application = express();
 
@@ -12,17 +12,18 @@ app.use(cors());
 
 // application routes
 
+app.use("/api", productRouter);
 const getAController = (req: Request, res: Response) => {
-    res.send('Hello World!')
+  res.send("Hello World!");
 };
 
-app.get('/', getAController)
-app.use(globalErrorHandler)
+app.get("/", getAController);
+app.use(globalErrorHandler);
 
-app.use("*", (req: Request, res: Response) =>{
+app.use("*", (req: Request, res: Response) => {
   res.status(404).json({
     status: false,
-    message: "Route not found"
-  })
-})
+    message: "Route not found",
+  });
+});
 export default app;
