@@ -1,5 +1,6 @@
 
-const Login = () => {
+
+const AdminLayout = () => {
     return (
         <div>
             
@@ -7,4 +8,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default AdminLayout;
