@@ -1,7 +1,10 @@
 import App from "@/App";
 import AdminLayout from "@/components/layout/AdminLayout";
 import About from "@/pages/About";
+import AdminDash from "@/pages/admin/AdminDash";
+import ManageOrders from "@/pages/admin/ManageOrders";
 import ManageProducts from "@/pages/admin/ManageProducts";
+import ManageUsers from "@/pages/admin/ManageUsers";
 import Home from "@/pages/home/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -27,8 +30,20 @@ export const routes = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       {
-        path: "manage-product",
+        path: "/admin/dash",
+        element: <AdminDash />,
+      },
+      {
+        path: "manage-products",
         element: <ManageProducts />,
+      },
+      {
+        path: "manage-users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "manage-orders",
+        element: <ManageOrders />,
       },
     ],
   },
