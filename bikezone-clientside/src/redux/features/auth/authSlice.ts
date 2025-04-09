@@ -22,8 +22,8 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, auction) => {
-      const { user, token } = auction.payload;
+    setUser: (state, action) => {
+      const { user, token } = action.payload;
       state.user = user;
       state.token = token;
     },

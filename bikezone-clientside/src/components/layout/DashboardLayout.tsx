@@ -15,13 +15,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { toast } from "sonner";
 
 const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
-
-  const role: string = "admin";
+  const user = useAppSelector(selectCurrentUser);
+  const role: string = user?.role;
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    const toastId = toast.loading("Logging out....");
+    dispatch(logout());
+    navigate("/");
+    toast.success("User Logout!", { id: toastId, duration: 5000 });
+  };
 
   const adminItems = [
     { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dash" },
@@ -39,12 +49,6 @@ const DashboardLayout = () => {
 
   const currentItems = role === "admin" ? adminItems : userItems;
   const panelTitle = role === "admin" ? "Admin Panel" : "My Account";
-
-  const handleLogout = () => {
-    // Add your logout logic here (clear tokens, etc.)
-    console.log("User logged out");
-    navigate("/login"); // Redirect to login page
-  };
 
   return (
     <div className="flex h-screen bg-background">
@@ -168,7 +172,7 @@ const DashboardLayout = () => {
           <div className="p-2 border-t">
             <Button
               className="w-full justify-center h-10 px-4"
-              onClick={handleLogout}
+              onClick={() => handleLogout()}
             >
               <LogOut className="h-4 w-4" />
               <span className="ml-3">Logout</span>
