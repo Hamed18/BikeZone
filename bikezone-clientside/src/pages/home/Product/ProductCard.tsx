@@ -49,16 +49,18 @@ const ProductCard = () => {
                 </li>
                 <p className=" text-base">Category : {product.category}</p>
               </div>
-              <Button
-                style={{
-                  backgroundColor: "#0000",
-                  color: "black",
-                  border: "2px solid black",
-                }}
-              >
-                <Info />
-                View Details
-              </Button>
+              <Link to={`/product/${product?._id}`}>
+                <Button
+                  style={{
+                    backgroundColor: "#0000",
+                    color: "black",
+                    border: "2px solid black",
+                  }}
+                >
+                  <Info />
+                  View Details
+                </Button>
+              </Link>
             </div>
           </div>
         ))}
