@@ -70,3 +70,4 @@ export const userController ={
     updateUser,
     deleteUser,
 }
+

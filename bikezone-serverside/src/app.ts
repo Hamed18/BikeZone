@@ -3,7 +3,7 @@ import express, { Application, Request, Response } from "express";
 
 import { globalErrorHandler } from "./app/middleeatres/globalErrorHandler";
 import productRouter from "./app/modules/product/product.router";
-import orderRouter from './app/modules/order/order.router';
+import orderRouter from "./app/modules/order/order.router";
 
 const app: Application = express();
 //  CORS setup
