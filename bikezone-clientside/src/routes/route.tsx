@@ -1,5 +1,5 @@
 import App from "@/App";
-import AdminLayout from "@/components/layout/AdminLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import About from "@/pages/About";
 import AdminDash from "@/pages/admin/AdminDash";
 import ManageOrders from "@/pages/admin/ManageOrders";
@@ -8,6 +8,7 @@ import ManageUsers from "@/pages/admin/ManageUsers";
 import Home from "@/pages/home/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import UserDash from "@/pages/user/UserDash";
 import { createBrowserRouter } from "react-router-dom";
 
 export const routes = createBrowserRouter([
@@ -27,7 +28,7 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: <DashboardLayout />,
     children: [
       {
         path: "/admin/dash",
@@ -44,6 +45,16 @@ export const routes = createBrowserRouter([
       {
         path: "manage-orders",
         element: <ManageOrders />,
+      },
+    ],
+  },
+  {
+    path: "/user",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "dash",
+        element: <UserDash />,
       },
     ],
   },
