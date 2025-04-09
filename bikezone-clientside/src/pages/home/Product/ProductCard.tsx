@@ -1,94 +1,62 @@
-import { BiDollar } from "react-icons/bi";
-export const products = [
-  {
-    name: "TrailBlazer X100",
-    brand: "Trek",
-    image: "https://i.ibb.co.com/qMCSFgLC/bike.jpg",
-    price: 1299.99,
-    category: "Mountain",
-    description:
-      "A rugged mountain bike designed for all terrains and adventures.",
-    quantity: 10,
-  },
-  {
-    name: "Speedster Pro",
-    brand: "Giant",
-    image: "https://i.ibb.co.com/qMCSFgLC/bike.jpg",
-    price: 999.99,
-    category: "Road",
-    description: "Lightweight road bike for speed enthusiasts and racers.",
-    quantity: 8,
-  },
-  {
-    name: "CityCruise 3000",
-    brand: "Specialized",
-    image: "https://i.ibb.co.com/qMCSFgLC/bike.jpg",
-    price: 749.99,
-    category: "Hybrid",
-    description: "Perfect hybrid bike for city commuting and light trails.",
-    quantity: 15,
-  },
-  {
-    name: "VoltRide E500",
-    brand: "Cannondale",
-    image: "https://i.ibb.co.com/qMCSFgLC/bike.jpg",
-    price: 1799.99,
-    category: "Electric",
-    description: "Electric bike with long battery life and powerful motor.",
-    quantity: 5,
-  },
-  {
-    name: "HillMaster Pro",
-    brand: "Scott",
-    image: "https://i.ibb.co.com/0pgh63tb/bike.jpg",
-    price: 1399.99,
-    category: "Mountain",
-    description:
-      "Full suspension bike built for uphill and downhill thrill rides.",
-    quantity: 4,
-  },
-  {
-    name: "EcoRide S1",
-    brand: "RadPower",
-    image: "https://i.ibb.co.com/0pgh63tb/bike.jpg",
-    price: 1199.99,
-    category: "Electric",
-    description: "Eco-friendly electric commuter bike for everyday rides.",
-    quantity: 12,
-  },
-  {
-    name: "UrbanFlex 700",
-    brand: "Bianchi",
-    image: "https://i.ibb.co.com/qMCSFgLC/bike.jpg",
-    price: 899.99,
-    category: "Hybrid",
-    description:
-      "Stylish hybrid bike built for comfort and performance in city rides.",
-    quantity: 6,
-  },
-];
-const ProductCard = () => {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2">
-      {products.slice(0, 6).map((product, index) => (
-        <div className="shadow-xl" key={index}>
-          <div className=" h-40 flex justify-center items-center overflow-hidden">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="h-full object-contain"
-            />
-          </div>
+import { Button } from "@/components/ui/button";
+import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
+import { TProduct } from "@/types";
+import { Link } from "react-router-dom";
 
-          <h3 className="font-bold text-center text-ellipsis overflow-hidden  px-2">
-            {product.name}
-          </h3>
-          <p className="flex justify-center items-center font-semibold text-[#E81938] px-2">
-            {product.price}
-            <BiDollar />
-          </p>
-        </div>
-      ))}
+const ProductCard = () => {
+  const { data, isLoading } = useGetAllProductsQuery(undefined);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  return (
+    <div>
+      {" "}
+      <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-16">
+        {data?.data?.slice(0, 6).map((product: TProduct) => (
+          <div className=" max-w-md w-full shadow-md">
+            <div className="relative">
+              <img
+                alt="Banner Profile"
+                src={product.image}
+                className="w-full rounded-none h-52"
+              />
+
+              <div className="absolute bg-black text-base text-white flex justify-center items-center bottom-0 left-2/4 transform -translate-x-1/2 translate-y-1/2 w-20 h-20 rounded-full border-2 font-extrabold border-white">
+                ${product.price}
+              </div>
+            </div>
+
+            <div className="p-5">
+              <p className="text-gray-400 text-base mt-5 ">
+                In Stock :
+                <span className=" text-black font-bold">
+                  {" "}
+                  {product.quantity}
+                </span>
+              </p>
+              <Link to={`/product/${product._id}`}>
+                <p className="text-2xl font-medium mt-3 hover:underline">
+                  {product.name}
+                </p>
+              </Link>
+
+              <div className="flex justify-start gap-5 items-center py-2 font-bold text-gray-700">
+                <li className="list-inside  list-disc  text-base">
+                  Brand : {product.brand}
+                </li>
+                <p className=" text-base">Category : {product.category}</p>
+              </div>
+              <Button>Add to Cart</Button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center items-center mx-auto py-10">
+        <Link to="/products/">
+          <Button>View All</Button>
+        </Link>
+      </div>
     </div>
   );
 };
