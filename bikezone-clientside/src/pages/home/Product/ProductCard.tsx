@@ -1,18 +1,20 @@
+import LoadAnimation from "@/components/menu/LoadAnimation";
 import { Button } from "@/components/ui/button";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
+import { Info } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ProductCard = () => {
   const { data, isLoading } = useGetAllProductsQuery(undefined);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadAnimation />;
   }
   return (
     <div>
       {" "}
-      <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {data?.data?.slice(0, 6).map((product: TProduct) => (
           <div className=" max-w-md w-full shadow-md">
             <div className="relative">
@@ -47,7 +49,16 @@ const ProductCard = () => {
                 </li>
                 <p className=" text-base">Category : {product.category}</p>
               </div>
-              <Button>Add to Cart</Button>
+              <Button
+                style={{
+                  backgroundColor: "#0000",
+                  color: "black",
+                  border: "2px solid black",
+                }}
+              >
+                <Info />
+                View Details
+              </Button>
             </div>
           </div>
         ))}
