@@ -11,7 +11,7 @@ const createAdmin = catchAsync(async (req: Request, res: Response)=>{
   
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
-    message: 'Admin created successfully',
+    message: 'User created successfully',
     data: result,
   })
 })

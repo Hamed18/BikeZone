@@ -1,5 +1,7 @@
 import App from "@/App";
+import AdminRoute from "@/components/layout/AdminRoute";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import ProtectedRoute from "@/components/layout/ProtectedRoute";
 import About from "@/pages/About";
 import AdminDash from "@/pages/admin/AdminDash";
 import ManageOrders from "@/pages/admin/ManageOrders";
@@ -39,7 +41,11 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <DashboardLayout />,
+    element: (
+      <AdminRoute>
+        <DashboardLayout />
+      </AdminRoute>
+    ),
     children: [
       {
         path: "/admin/dash",
@@ -61,7 +67,11 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <DashboardLayout />,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "dash",

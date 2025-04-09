@@ -13,18 +13,36 @@ import {
   // DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import { LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const LoginMenu = () => {
-  const role: string = "admin";
+  const user = useAppSelector(selectCurrentUser);
+  const role: string = user?.role;
+
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    const toastId = toast.loading("Logging out...");
+    dispatch(logout());
+    toast.success("User Logout!", { id: toastId, duration: 5000 });
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>User Name</Button>
+        <Button>{user?.name}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
+        <DropdownMenuLabel>
+          <span className="text-sm ms-2">
+            {" "}
+            {role === "admin" ? "Hello Admin" : "My Account"}
+          </span>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <Link to={role === "admin" ? "/admin/dash" : "/user/dash"}>
@@ -43,9 +61,8 @@ const LoginMenu = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+        <DropdownMenuItem className="flex justify-between cursor-pointer" onClick={() => handleLogout()}>
+          Log out <LogOut />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

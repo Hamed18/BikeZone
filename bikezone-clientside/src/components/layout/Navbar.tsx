@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppSelector } from "@/redux/hooks";
 
 type NavItem = {
   to: string;
@@ -13,8 +15,10 @@ type NavItem = {
 };
 
 const Navbar = () => {
+  const user = useAppSelector(selectCurrentUser);
+
   const [isOpen, setIsOpen] = useState(false);
-  const user = true; // This should come from your auth context
+  // const user = false; // This should come from your auth context
 
   const navItems: NavItem[] = [
     { to: "/", label: "Home", show: true },

@@ -13,11 +13,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
+import { useAppDispatch } from "@/redux/hooks";
+import { setUser } from "@/redux/features/auth/authSlice";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  email: z.string().min(2, {
+    message: "Email must be at least 2 characters.",
   }),
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
@@ -25,20 +30,35 @@ const formSchema = z.object({
 });
 
 const Login = () => {
+  const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
+  const [loginUser, { isLoading }] = useLoginMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    const toastId = toast.loading("User Login....");
+
     try {
-      console.log("Login values:", values);
-      // Add your login logic here
+      const res = await loginUser(data).unwrap();
+      dispatch(setUser({ user: res.data, token: res.token }));
+      toast.success("User Logged In!", { id: toastId });
+      form.reset();
+      if (res?.data?.role === "admin") {
+        navigate("/admin/dash");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Login error:", error);
+      toast.error("User not logged in!", { id: toastId });
     }
   }
 
@@ -67,12 +87,12 @@ const Login = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your username" {...field} />
+                      <Input placeholder="Enter your email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -99,10 +119,16 @@ const Login = () => {
 
               <Button
                 type="submit"
-                className="w-full mt-6"
-                disabled={form.formState.isSubmitting}
+                className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
+                disabled={isLoading}
               >
-                {form.formState.isSubmitting ? "Logging in..." : "Login"}
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader className="animate-spin" /> logging...
+                  </span>
+                ) : (
+                  "Login"
+                )}
               </Button>
             </form>
           </Form>

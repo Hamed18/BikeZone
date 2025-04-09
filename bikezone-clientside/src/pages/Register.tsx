@@ -12,7 +12,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -27,6 +30,9 @@ const formSchema = z.object({
 });
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [register, { isLoading }] = useRegisterMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,12 +42,17 @@ const Register = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    const toastId = toast.loading("User creating....");
+
     try {
-      console.log("Registration values:", values);
-      // Add your registration logic here
+      register(data);
+      form.reset();
+      navigate("/login");
+      toast.success("User Registered!", { id: toastId });
     } catch (error) {
       console.error("Registration error:", error);
+      toast.error("User not register!", { id: toastId });
     }
   }
 
@@ -64,9 +75,9 @@ const Register = () => {
                 </span>
               </h2>
             </div>
-            <h1 className="text-lg font-bold text-center my-8">
+            <div className=" text-2xl font-bold text-center my-8">
               Create Account
-            </h1>
+            </div>
           </div>
 
           <Form {...form}>
@@ -120,11 +131,15 @@ const Register = () => {
               <Button
                 type="submit"
                 className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
-                disabled={form.formState.isSubmitting}
+                disabled={isLoading}
               >
-                {form.formState.isSubmitting
-                  ? "Creating account..."
-                  : "Register"}
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader className="animate-spin" /> Creating...
+                  </span>
+                ) : (
+                  "Register"
+                )}
               </Button>
             </form>
           </Form>
