@@ -1,8 +1,10 @@
 import logo from "@/assets/logo.png";
+import Marquee from "./home/Marquee";
 
 const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
+      <Marquee/>
       <main className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="bg-white p-8 rounded-lg shadow-sm border">
           {/* Header Section */}
