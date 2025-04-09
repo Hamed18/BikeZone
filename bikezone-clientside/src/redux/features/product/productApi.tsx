@@ -5,7 +5,7 @@ const productApi = baseApi.injectEndpoints({
     getAllProducts: builder.query({
       query: () => {
         return {
-          url: "/products",
+          url: `/products`,
           method: "GET",
         };
       },
@@ -36,6 +36,6 @@ const productApi = baseApi.injectEndpoints({
 export const {
   useGetAllProductsQuery,
   useAddProductMutation,
-  useUpdateProductMutation,
   useDeleteProductMutation,
+  useUpdateProductMutation,
 } = productApi;

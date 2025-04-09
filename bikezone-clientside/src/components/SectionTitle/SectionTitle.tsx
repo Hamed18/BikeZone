@@ -8,9 +8,9 @@ const SectionTitle = ({ subtitle, title }: SectionTitleProps) => {
   return (
     <div className="text-center py-20 font-semibold">
       <div className="flex justify-center items-center gap-2 text-lg uppercase">
-        <BiMenuAltRight className="" />
+        <BiMenuAltRight className="text-[#E81938] " />
         {subtitle}
-        <BiMenuAltLeft />
+        <BiMenuAltLeft className="text-[#E81938] " />
       </div>
 
       <h1 className="text-5xl">{title}</h1>
