@@ -48,11 +48,14 @@ const Login = () => {
 
     try {
       const res = await loginUser(data).unwrap();
-      console.log(res);
       dispatch(setUser({ user: res.data, token: res.token }));
       toast.success("User Logged In!", { id: toastId });
       form.reset();
-      navigate("/");
+      if (res?.data?.role === "admin") {
+        navigate("/admin/dash");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Login error:", error);
       toast.error("User not logged in!", { id: toastId });

@@ -1,4 +1,5 @@
 import App from "@/App";
+import AdminRoute from "@/components/layout/AdminRoute";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import ProtectedRoute from "@/components/layout/ProtectedRoute";
 import About from "@/pages/About";
@@ -40,7 +41,11 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <DashboardLayout />,
+    element: (
+      <AdminRoute>
+        <DashboardLayout />
+      </AdminRoute>
+    ),
     children: [
       {
         path: "/admin/dash",
