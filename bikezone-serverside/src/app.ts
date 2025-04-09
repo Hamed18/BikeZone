@@ -22,7 +22,6 @@ app.use(
 app.use(express.json());
 
 // application routes
-
 app.use("/api", productRouter);
 app.use("/api/order", orderRouter);
 

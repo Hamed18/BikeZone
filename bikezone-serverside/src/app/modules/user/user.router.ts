@@ -21,5 +21,5 @@ router.post(
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );
-
 export const UserRoutes = router;
+
