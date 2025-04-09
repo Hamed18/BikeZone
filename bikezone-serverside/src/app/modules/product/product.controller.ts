@@ -17,7 +17,7 @@ const createProduct = catchAsync(async (req, res) => {
 
 //Get all Bike
 const getProduct = catchAsync(async (req, res) => {
-  const result = await productService.getProduct();
+  const result = await productService.getProduct(req.query);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
