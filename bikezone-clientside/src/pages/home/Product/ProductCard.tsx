@@ -1,6 +1,7 @@
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
 import { BiDollar } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const ProductCard = () => {
   const { data, isLoading } = useGetAllProductsQuery(undefined);
@@ -9,8 +10,11 @@ const ProductCard = () => {
   console.log(data?.data);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2">
-      {data?.data?.slice(0, 6).map((product: TProduct, index: string) => (
-        <div className="max-w-xs min-w-[200px] shadow-xl mx-auto" key={index}>
+      {data?.data?.slice(0, 6).map((product: TProduct) => (
+        <div
+          className="max-w-xs min-w-[200px] shadow-xl mx-auto"
+          key={product._id}
+        >
           <div className=" h-40 flex justify-center items-center overflow-hidden">
             <img
               src={product.image}
@@ -26,7 +30,7 @@ const ProductCard = () => {
             {product.price}
             <BiDollar />
           </p>
-          <button className="bg-[#E81938] text-white">View</button>
+          <Link to={`/product/${product._id}`}>View Details</Link>
         </div>
       ))}
     </div>
