@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import { userService } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
@@ -70,4 +69,3 @@ export const userController ={
     updateUser,
     deleteUser,
 }
-
