@@ -12,10 +12,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AddProduct from "./AddProduct";
-import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
+import {
+  useDeleteProductMutation,
+  useGetAllProductsQuery,
+} from "@/redux/features/product/productApi";
 import LoadAnimation from "@/components/menu/LoadAnimation";
 import { TProduct } from "@/types";
 import UpdateProduct from "./UpdateProduct";
+import { toast } from "sonner";
+import DeleteConfirmationDialog from "@/components/others/DeleteConfirmationDialog";
 
 const ManageProducts = () => {
   const {
@@ -26,15 +31,17 @@ const ManageProducts = () => {
     refetchOnMountOrArgChange: true,
   });
 
+  const [deleteProduct] = useDeleteProductMutation();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
   );
-
-  const handleDeleteProduct = async (id: string) => {
-    console.log(id);
-  };
+  const [productToDelete, setProductToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const filteredProducts = productData?.data.filter((product: TProduct) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -46,6 +53,31 @@ const ManageProducts = () => {
 
   const handleUpdateDialogClose = () => {
     setSelectedProductId(null);
+  };
+
+  const handleDeleteClick = (product: TProduct) => {
+    setProductToDelete({
+      id: product._id,
+      name: product.name,
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!productToDelete) return;
+    try {
+      await deleteProduct(productToDelete?.id);
+      refetch();
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete product");
+      console.error("Delete error:", error);
+    } finally {
+      setProductToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setProductToDelete(null);
   };
 
   if (isLoading) {
@@ -129,13 +161,14 @@ const ManageProducts = () => {
                     </Button>
 
                     <Button
-                      onClick={() => handleDeleteProduct(product?._id)}
+                      onClick={() => handleDeleteClick(product)}
                       title="Delete"
                       variant="outline"
                       size="icon"
                     >
                       <Trash2 className="h-4 w-4 text-red-300" />
                     </Button>
+
                     <Button title="Details" variant="outline" size="icon">
                       <Info className="h-4 w-4 text-blue-300" />
                     </Button>
@@ -147,7 +180,7 @@ const ManageProducts = () => {
         </Table>
       </div>
 
-      {/* Update Product Dialog - Single instance outside the map */}
+      {/* Update Product Dialog */}
       <Dialog
         open={!!selectedProductId}
         onOpenChange={(open) => !open && handleUpdateDialogClose()}
@@ -158,6 +191,14 @@ const ManageProducts = () => {
           productId={selectedProductId || ""}
         />
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationDialog
+        isOpen={!!productToDelete}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        productName={productToDelete?.name || ""}
+      />
     </div>
   );
 };
