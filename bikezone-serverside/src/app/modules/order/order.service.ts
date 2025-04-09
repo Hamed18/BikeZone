@@ -22,14 +22,14 @@ const createOrder = async(payload: IOrder): Promise<IOrder>=>{
       payload.totalPrice = totalPrice
       payload.orderStatus = 'pending'
 
-      if(requiredProduct.availableProduct < orderQuantity){
+      if(requiredProduct.quantity < orderQuantity){
         throw new Error('Not enough products available')
       }
 
       const order = await Order.create([payload], {session})
 
       const updateProduct = await Product.findByIdAndUpdate(order[0].product, {
-        $inc: { availableProduct: -orderQuantity}}, {new: true, session})
+        $inc: { quantity: -orderQuantity}}, {new: true, session})
   if(!updateProduct){
     throw new Error('Failed to update product')
   }
