@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Filter, ChevronDown } from "lucide-react";
+import { Search, Filter, ChevronDown, X, RotateCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,97 +16,38 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-
-const demoProducts = [
-  {
-    _id: "67f67048df9d77cc552cb5c6",
-    name: "Speedster Road Elite",
-    brand: "Cannondale",
-    price: 1299.99,
-    category: "Road",
-    description: "Lightweight carbon road bike with Shimano 105 groupset",
-    quantity: 8,
-    inStock: true,
-    image:
-      "https://cdn.britannica.com/16/126516-050-2D2DB8AC/Triumph-Rocket-III-motorcycle-2005.jpg",
-  },
-  {
-    _id: "67f648c0a269b3fb99e8c80a",
-    name: "Urban Commuter Pro",
-    brand: "Specialized",
-    image:
-      "https://cdn.britannica.com/16/126516-050-2D2DB8AC/Triumph-Rocket-III-motorcycle-2005.jpg",
-    price: 10000,
-    category: "Mountain",
-    description: "Premium urban commuter bike with advanced features",
-    quantity: 12,
-    inStock: true,
-  },
-  {
-    _id: "67f60f8c5e37f9e2313d2130",
-    name: "Sample City Commuter Bike",
-    brand: "Raleigh",
-    price: 2000,
-    category: "Mountain",
-    description: "Comfortable city bike with durable construction",
-    quantity: 4,
-    inStock: true,
-    image:
-      "https://cdn.britannica.com/16/126516-050-2D2DB8AC/Triumph-Rocket-III-motorcycle-2005.jpg",
-  },
-  {
-    _id: "67f5e7665e37f9e2313d210f",
-    name: "Trail Master XT",
-    brand: "Specialized",
-    image:
-      "https://cdn.britannica.com/16/126516-050-2D2DB8AC/Triumph-Rocket-III-motorcycle-2005.jpg",
-    price: 132143,
-    category: "Mountain",
-    description: "Professional grade mountain bike for extreme trails",
-    quantity: 1,
-    inStock: true,
-  },
-  {
-    _id: "67f5e7315e37f9e2313d2109",
-    name: "Trailblazer Mountain Bike",
-    brand: "Trek",
-    image:
-      "https://cdn.britannica.com/16/126516-050-2D2DB8AC/Triumph-Rocket-III-motorcycle-2005.jpg",
-    price: 899.99,
-    category: "Mountain",
-    description: "Full-suspension mountain bike with 29-inch wheels",
-    quantity: 15,
-    inStock: true,
-  },
-  {
-    _id: "67f5e65a5e37f9e2313d2105",
-    name: "City Commuter Bike",
-    brand: "Raleigh",
-    image:
-      "https://cdn.britannica.com/16/126516-050-2D2DB8AC/Triumph-Rocket-III-motorcycle-2005.jpg",
-    price: 800,
-    category: "Hybrid",
-    description: "Versatile hybrid bike for daily commuting",
-    quantity: 30,
-    inStock: true,
-  },
-];
+import LoadAnimation from "@/components/menu/LoadAnimation";
+import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
+import { toast } from "sonner";
 
 const AllProducts = () => {
+  const {
+    data: productData,
+    isLoading,
+    isError,
+  } = useGetAllProductsQuery(undefined);
   const [searchTerm, setSearchTerm] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(false);
 
+  // Calculate max price when data loads
+  const products = productData?.data || [];
+  const maxPrice =
+    products.length > 0 ? Math.max(...products.map((p) => p.price)) : 0;
+
+  // Initialize price range once when data loads
+  if (priceRange[1] === 0 && maxPrice > 0) {
+    setPriceRange([0, maxPrice]);
+  }
+
   // Get unique brands and categories for filters
-  const brands = [...new Set(demoProducts.map((product) => product.brand))];
-  const categories = [
-    ...new Set(demoProducts.map((product) => product.category)),
-  ];
+  const brands = [...new Set(products.map((product) => product.brand))];
+  const categories = [...new Set(products.map((product) => product.category))];
 
   // Filter products based on search and filters
-  const filteredProducts = demoProducts.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -147,9 +88,55 @@ const AllProducts = () => {
     );
   };
 
+  const resetPriceRange = () => {
+    setPriceRange([0, maxPrice]);
+    toast.success("Price range reset");
+  };
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setPriceRange([0, maxPrice]);
+    setSelectedBrands([]);
+    setSelectedCategories([]);
+    setInStockOnly(false);
+    toast.success("All filters reset");
+  };
+
+  if (isLoading) {
+    return <LoadAnimation />;
+  }
+
+  if (isError) {
+    return (
+      <div className="py-4 max-w-7xl mx-auto px-4 text-center">
+        <h3 className="text-2xl font-bold">Error Loading Products</h3>
+        <p className="text-muted-foreground mt-2">
+          Failed to load products. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="py-4 max-w-7xl mx-auto px-4">
-      <h3 className="text-2xl font-bold">Products</h3>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-bold">Products</h3>
+        {(searchTerm ||
+          selectedBrands.length > 0 ||
+          selectedCategories.length > 0 ||
+          inStockOnly ||
+          priceRange[0] !== 0 ||
+          priceRange[1] !== maxPrice) && (
+          <Button
+            variant="ghost"
+            onClick={resetFilters}
+            className="text-primary"
+          >
+            <X className="h-4 w-4 mr-1" />
+            Reset Filters
+          </Button>
+        )}
+      </div>
 
       {/* Search and Filter Bar */}
       <div className="flex flex-col md:flex-row gap-4 my-6">
@@ -173,7 +160,20 @@ const AllProducts = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 p-4 space-y-4">
             <div>
-              <h4 className="text-sm font-medium mb-2">Price Range</h4>
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="text-sm font-medium">Price Range</h4>
+                {(priceRange[0] !== 0 || priceRange[1] !== maxPrice) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={resetPriceRange}
+                    className="h-6 px-2 text-xs text-primary"
+                  >
+                    <RotateCcw className="h-3 w-3 mr-1" />
+                    Reset
+                  </Button>
+                )}
+              </div>
               <div className="flex items-center gap-2">
                 <Input
                   type="number"
@@ -237,10 +237,19 @@ const AllProducts = () => {
         </DropdownMenu>
       </div>
 
+      {/* Products Count */}
+      <div className="text-sm text-muted-foreground mb-4">
+        Showing {filteredProducts.length}{" "}
+        {filteredProducts.length === 1 ? "product" : "products"}
+      </div>
+
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProducts.map((product) => (
-          <Card key={product._id} className="hover:shadow-lg transition-shadow">
+          <Card
+            key={product._id}
+            className="hover:shadow-lg transition-shadow h-full flex flex-col"
+          >
             <CardHeader className="p-0">
               <img
                 src={product.image || "https://via.placeholder.com/300x200"}
@@ -248,7 +257,7 @@ const AllProducts = () => {
                 className="w-full h-48 object-cover rounded-t-lg"
               />
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="p-4 flex-grow">
               <CardTitle className="text-lg">{product.name}</CardTitle>
               <div className="mt-2 space-y-1">
                 <p className="text-sm">
@@ -280,7 +289,7 @@ const AllProducts = () => {
               </p>
             </CardContent>
             <CardFooter className="p-4 pt-0">
-              <Link to={`/product/${product?._id}`}>
+              <Link to={`/product/${product._id}`} className="w-full">
                 <Button className="w-full">View Details</Button>
               </Link>
             </CardFooter>
@@ -289,10 +298,13 @@ const AllProducts = () => {
       </div>
 
       {filteredProducts.length === 0 && (
-        <div className="text-center py-12">
+        <div className="text-center py-12 border rounded-lg">
           <p className="text-muted-foreground">
             No products match your search criteria
           </p>
+          <Button className="mt-4" onClick={resetFilters}>
+            Clear all filters
+          </Button>
         </div>
       )}
     </div>

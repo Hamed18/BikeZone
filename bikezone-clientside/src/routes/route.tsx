@@ -5,7 +5,7 @@ import AdminDash from "@/pages/admin/AdminDash";
 import ManageOrders from "@/pages/admin/ManageOrders";
 import ManageProducts from "@/pages/admin/ManageProducts";
 import ManageUsers from "@/pages/admin/ManageUsers";
-import AllProducts2 from "@/pages/AllProduct2";
+// import AllProducts2 from "@/pages/AllProduct2";
 import AllProducts from "@/pages/AllProducts";
 import Home from "@/pages/home/Home";
 import ProductDetails from "@/pages/home/Product/ProductDetails";
@@ -29,7 +29,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/products/",
-        element: <AllProducts2 />,
+        element: <AllProducts />,
       },
       {
         path: "/product/:productId",
