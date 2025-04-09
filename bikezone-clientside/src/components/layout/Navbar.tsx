@@ -19,6 +19,7 @@ const Navbar = () => {
   const navItems: NavItem[] = [
     { to: "/", label: "Home", show: true },
     { to: "/about", label: "About", show: true },
+    { to: "/products", label: "Products", show: true },
     { to: "/login", label: "Login", show: !user },
   ];
 
