@@ -19,6 +19,7 @@ const Navbar = () => {
   const navItems: NavItem[] = [
     { to: "/", label: "Home", show: true },
     { to: "/about", label: "About", show: true },
+    { to: "/products", label: "Products", show: true },
     { to: "/login", label: "Login", show: !user },
   ];
 
@@ -63,7 +64,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button size="icon">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>

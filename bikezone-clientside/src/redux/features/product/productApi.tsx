@@ -10,6 +10,14 @@ const productApi = baseApi.injectEndpoints({
         };
       },
     }),
+    getSingleProduct: builder.query({
+      query: (id) => {
+        return {
+          url: `/products/${id}`,
+          method: "GET",
+        };
+      },
+    }),
     addProduct: builder.mutation({
       query: (body) => ({
         url: `/products`,
@@ -18,11 +26,15 @@ const productApi = baseApi.injectEndpoints({
       }),
     }),
     updateProduct: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/products/${id}`,
-        method: "PATCH",
-        data,
-      }),
+      query: ({ id, data }) => {
+        console.log({ id, data });
+
+        return {
+          url: `/products/${id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
     }),
     deleteProduct: builder.mutation({
       query: (id) => ({
@@ -38,4 +50,5 @@ export const {
   useAddProductMutation,
   useDeleteProductMutation,
   useUpdateProductMutation,
+  useGetSingleProductQuery,
 } = productApi;

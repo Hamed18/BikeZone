@@ -11,64 +11,83 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAddProductMutation } from "@/redux/features/product/productApi";
 import { Loader } from "lucide-react";
 import { productSchema } from "@/schemas/productForm.schema";
 import { toast } from "sonner";
 
 type TProductFormData = z.infer<typeof productSchema>;
+import { useEffect } from "react";
+import {
+  useUpdateProductMutation,
+  useGetSingleProductQuery,
+} from "@/redux/features/product/productApi";
+import LoadAnimation from "@/components/menu/LoadAnimation";
 
-const AddProduct = ({
-  setIsDialogOpen,
+const UpdateProduct = ({
+  setIsUpdateProduct,
   refetch,
+  productId,
 }: {
-  setIsDialogOpen: (open: boolean) => void;
+  setIsUpdateProduct: (open: boolean) => void;
   refetch: () => void;
+  productId: string;
 }) => {
-  const [addProduct, { isLoading }] = useAddProductMutation();
+  const [updateProduct, { isLoading }] = useUpdateProductMutation();
+  const { data: product, isFetching: isProductFetching } =
+    useGetSingleProductQuery(productId, {
+      skip: !productId,
+    });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
     watch,
   } = useForm<TProductFormData>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: "",
-      brand: "",
-      image: "",
-      price: 0,
-      category: undefined,
-      description: "",
-      quantity: 0,
-      inStock: true,
-    },
   });
+
+  useEffect(() => {
+    if (product) {
+      // Pre-fill the form with existing product data
+      setValue("name", product.data.name);
+      setValue("brand", product.data.brand);
+      setValue("image", product.data.image);
+      setValue("price", product.data.price);
+      setValue("category", product.data.category);
+      setValue("description", product.data.description);
+      setValue("quantity", product.data.quantity);
+      setValue("inStock", product.data.inStock);
+    }
+  }, [product, setValue]);
 
   const inStockValue = watch("inStock");
 
   const onSubmit = async (data: TProductFormData) => {
-    const toastId = toast.loading("Uploading....");
-
+    const toastId = toast.loading("Updating...");
     try {
-      const result = await addProduct(data).unwrap();
-      console.log("Product added successfully:", result);
-      toast.success("Product Created!", { id: toastId });
-      setIsDialogOpen(false);
-      reset();
+      const result = await updateProduct({
+        id: productId,
+        data,
+      }).unwrap();
+      console.log("Product updated successfully:", result);
+      toast.success("Product Updated!", { id: toastId });
+      setIsUpdateProduct(false);
       refetch();
     } catch (error) {
-      toast.error("Not Create!", { id: toastId });
-      console.error("Failed to add product:", error);
+      toast.error("Update Failed!", { id: toastId });
+      console.error("Failed to update product:", error);
     }
   };
+  if (isProductFetching) {
+    return <LoadAnimation />;
+  }
 
   return (
     <DialogContent className="sm:max-w-[600px]">
       <DialogHeader>
-        <DialogTitle>Add New Product</DialogTitle>
+        <DialogTitle>Update Product</DialogTitle>
       </DialogHeader>
       <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
         <div className="grid grid-cols-2 gap-4">
@@ -181,10 +200,10 @@ const AddProduct = ({
             {isLoading ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                Updating...
               </>
             ) : (
-              "Save Product"
+              "Update Product"
             )}
           </Button>
         </div>
@@ -193,4 +212,4 @@ const AddProduct = ({
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;
