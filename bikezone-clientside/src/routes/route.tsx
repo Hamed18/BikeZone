@@ -1,10 +1,15 @@
 import App from "@/App";
-import AdminLayout from "@/components/layout/AdminLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import About from "@/pages/About";
+import AdminDash from "@/pages/admin/AdminDash";
+import ManageOrders from "@/pages/admin/ManageOrders";
 import ManageProducts from "@/pages/admin/ManageProducts";
+import ManageUsers from "@/pages/admin/ManageUsers";
 import Home from "@/pages/home/Home";
+import ProductDetails from "@/pages/home/Product/ProductDetails";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import UserDash from "@/pages/user/UserDash";
 import { createBrowserRouter } from "react-router-dom";
 
 export const routes = createBrowserRouter([
@@ -20,15 +25,41 @@ export const routes = createBrowserRouter([
         path: "/about",
         element: <About />,
       },
+      {
+        path: "/product/:productId",
+        element: <ProductDetails />,
+      },
     ],
   },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: <DashboardLayout />,
     children: [
       {
-        path: "manage-product",
+        path: "/admin/dash",
+        element: <AdminDash />,
+      },
+      {
+        path: "manage-products",
         element: <ManageProducts />,
+      },
+      {
+        path: "manage-users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "manage-orders",
+        element: <ManageOrders />,
+      },
+    ],
+  },
+  {
+    path: "/user",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "dash",
+        element: <UserDash />,
       },
     ],
   },

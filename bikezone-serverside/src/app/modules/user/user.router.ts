@@ -1,16 +1,25 @@
-import { NextFunction, Request, Response, Router } from "express";
-import { userController } from "./user.controller";
-import { UserValidation } from "./userValidation";
-import auth from './../../middleeatres/auth';
-import { USER_ROLE } from "./user.constants";
-import validateRequest from './../../middleeatres/validateRequest';
+import express from 'express';
+import auth from '../../middlewares/auth';
+import validateRequest from '../../middlewares/validateRequest';
+import { createAdminValidationSchema } from '../Admin/admin.validation';
+import { createCustomerValidationSchema } from './../customer/customer.validation';
+import { USER_ROLE } from './user.constant';
+import { UserControllers } from './user.controller';
 
-const userRouter = Router()
-userRouter.post('/create-admin', validateRequest(UserValidation.userValidationSchema),
-    userController.createAdmin)
-userRouter.get('/', auth(USER_ROLE.admin), userController.getUser)
-userRouter.get('/:userId', userController.getSingleUser)
-userRouter.put('/:userId', userController.updateUser)
-userRouter.delete('/:userId', userController.deleteUser)
+const router = express.Router();
 
-export default userRouter
+router.post(
+  '/create-customer',
+  auth(USER_ROLE.admin),
+  validateRequest(createCustomerValidationSchema),
+  UserControllers.createCustomer,
+);
+
+router.post(
+  '/create-admin',
+  // auth(USER_ROLE.admin),
+  validateRequest(createAdminValidationSchema),
+  UserControllers.createAdmin,
+);
+
+export const UserRoutes = router;
