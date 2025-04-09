@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-const AdminLayout = () => {
+const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const AdminLayout = () => {
   ];
 
   const userItems = [
-    { name: "Dashboard", icon: LayoutDashboard, href: "/user" },
+    { name: "Dashboard", icon: LayoutDashboard, href: "/user/dash" },
     { name: "Profile", icon: User, href: "/user/profile" },
     { name: "My Orders", icon: Package, href: "/user/orders" },
     { name: "Payments", icon: CreditCard, href: "/user/payments" },
@@ -198,4 +198,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default DashboardLayout;
