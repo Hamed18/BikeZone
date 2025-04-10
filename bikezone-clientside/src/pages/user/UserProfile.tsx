@@ -37,7 +37,6 @@ const UserProfile = () => {
     name: "",
     email: "",
   });
-  console.log(formData);
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -51,8 +50,10 @@ const UserProfile = () => {
       });
     }
   }, [userData]);
-  const [updateProfile] = useUpdateProfileMutation();
-  //   const [updatePassword] = useUpdatePasswordMutation();
+  const [updateProfile, { isLoading: isUserUpdate }] =
+    useUpdateProfileMutation();
+  const [updatePassword, { isLoading: isUpdatingPassword }] =
+    useUpdatePasswordMutation();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,6 +66,8 @@ const UserProfile = () => {
   };
 
   const handleSave = async () => {
+    const toastId = toast.loading("Updating...");
+
     try {
       const res = await updateProfile({
         id: userData?.data?._id,
@@ -74,39 +77,48 @@ const UserProfile = () => {
       console.log("update", res);
       userRefetch();
 
-      toast.success("Profile updated successfully");
+      toast.success("Profile updated successfully", { id: toastId });
       setIsEditing(false);
     } catch (error) {
-      toast.error("Failed to update profile");
+      toast.error("Failed to update profile", { id: toastId });
       console.error("Update error:", error);
     }
   };
 
-  //   const handlePasswordUpdate = async () => {
-  //     if (passwordData.newPassword !== passwordData.confirmPassword) {
-  //       toast.error("New passwords don't match");
-  //       return;
-  //     }
+  const handlePasswordUpdate = async () => {
+    const toastId = toast.loading("Password updating...");
 
-  //     try {
-  //       await updatePassword({
-  //         userId: userData?.data?._id,
-  //         currentPassword: passwordData.currentPassword,
-  //         newPassword: passwordData.newPassword
-  //       }).unwrap();
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error("Please confirm the new password.", { id: toastId });
+      return;
+    }
 
-  //       toast.success("Password updated successfully");
-  //       setPasswordData({
-  //         currentPassword: "",
-  //         newPassword: "",
-  //         confirmPassword: "",
-  //       });
-  //       setShowPasswordForm(false);
-  //     } catch (error) {
-  //       toast.error("Failed to update password. Check your current password.");
-  //       console.error("Password update error:", error);
-  //     }
-  //   };
+    try {
+      const res = await updatePassword({
+        id: userData?.data?._id,
+        data: passwordData,
+      }).unwrap();
+
+      console.log("update passowrd", res);
+
+      toast.success("Password updated successfully", { id: toastId });
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      setShowPasswordForm(false);
+    } catch (error) {
+      toast.error(
+        error?.data?.message ||
+          "Failed to update password. Check your current password.",
+        {
+          id: toastId,
+        }
+      );
+      console.error("Password update error:", error);
+    }
+  };
 
   const handleCancel = () => {
     setFormData({
@@ -131,13 +143,21 @@ const UserProfile = () => {
               <X className="h-4 w-4" />
               Cancel
             </Button>
-            <Button onClick={handleSave} className="gap-2">
+            <Button
+              disabled={isUserUpdate}
+              onClick={handleSave}
+              className="gap-2"
+            >
               <Save className="h-4 w-4" />
               Save Changes
             </Button>
           </div>
         ) : (
-          <Button onClick={() => setIsEditing(true)} className="gap-2">
+          <Button
+            disabled={userLoading}
+            onClick={() => setIsEditing(true)}
+            className="gap-2"
+          >
             <Edit className="h-4 w-4" />
             Edit Profile
           </Button>
@@ -253,7 +273,8 @@ const UserProfile = () => {
                   Cancel
                 </Button>
                 <Button
-                // onClick={handlePasswordUpdate}
+                  disabled={isUpdatingPassword}
+                  onClick={handlePasswordUpdate}
                 >
                   Update Password
                 </Button>

@@ -1,51 +1,65 @@
+import { FaBicycle, FaHandsHelping, FaLeaf, FaPhoneAlt, FaEnvelope, FaUsers } from "react-icons/fa";
 import logo from "@/assets/logo.png";
-import Marquee from "./home/Marquee";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Marquee/>
-      <main className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <div className="bg-white p-8 rounded-lg shadow-sm border">
-          {/* Header Section */}
-          <div className="flex items-center justify-center gap-2 border border-black bg-gray-200 p-4 rounded-xl mb-8">
-            <img src={logo} alt="Bike Zone Logo" className="w-10 h-10 md:w-16 md:h-16" />
-            <div className="text-center">
-              <h2 className="uppercase font-bold text-xl md:text-3xl">Bike Zone</h2>
-              <p className="-mt-1 text-xs md:text-sm tracking-widest">Upgrade your ride</p>
-            </div>
-          </div>
-
-          {/* About Section */}
-          <h1 className="text-2xl font-bold text-center mb-6">About Us</h1>
-          <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-4">
-            Welcome to <span className="font-semibold">Bike Zone</span>, your go-to destination for all things biking.
-            We're passionate about two wheels and dedicated to helping you find the perfect ride.
-          </p>
-
-          {/* Mission Section */}
-          <h2 className="text-xl font-semibold mt-8 mb-2">Our Mission</h2>
-          <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-4">
-            Our mission is to provide high-quality bikes and accessories that meet the needs of every rider — from
-            beginners to professionals. We aim to promote a healthier, more eco-friendly lifestyle through cycling.
-          </p>
-
-          {/* Policy Section */}
-          <h2 className="text-xl font-semibold mt-8 mb-2">Our Policy</h2>
-          <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-4">
-            We stand by the quality of our products and offer a no-hassle return policy within 30 days of purchase.
-            Customer satisfaction is our top priority, and we ensure every transaction is secure and transparent.
-          </p>
-
-          {/* Contact Info Section */}
-          <h2 className="text-xl font-semibold mt-8 mb-2">Contact Information</h2>
-          <div className="text-gray-700 text-sm md:text-base leading-relaxed">
-            <p>Email: <span className="font-medium">support@bikezone.com</span></p>
-            <p>Phone: <span className="font-medium">+1 (800) 123-4567</span></p>
-            <p>Location: <span className="font-medium">123 Cycle Street, Ride City, CA 90001</span></p>
-            <p>Business Hours: <span className="font-medium">Mon - Sat: 9AM - 6PM</span></p>
-          </div>
+    <div className="bg-gray-50 text-gray-800">
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-r from-green-400 to-blue-500 text-white h-[300px] md:h-[400px] flex items-center justify-center text-center px-4">
+        <div>
+          <h1 className="text-3xl md:text-5xl font-bold">Welcome to Bike Zone</h1>
+          <p className="mt-3 text-lg md:text-xl">Your ride, your freedom, our mission.</p>
         </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        {/* About Section */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-semibold mb-4">Who We Are</h2>
+          <p className="text-gray-700 leading-relaxed">
+            Bike Zone is more than a shop — we are a destination for cycling enthusiasts. Whether you’re a daily commuter, weekend adventurer, or eco-conscious rider, we bring quality and style to your ride.
+          </p>
+        </section>
+
+        {/* Mission, Values, Contact */}
+        <section className="grid md:grid-cols-3 gap-8 mb-16 text-center">
+          <div className="bg-white p-6 rounded-lg shadow-md border hover:shadow-lg transition">
+            <FaBicycle className="text-green-600 text-4xl mx-auto mb-4" />
+            <h3 className="font-bold text-xl mb-2">Our Mission</h3>
+            <p>To empower communities through safe, reliable, and affordable cycling.</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border hover:shadow-lg transition">
+            <FaLeaf className="text-blue-500 text-4xl mx-auto mb-4" />
+            <h3 className="font-bold text-xl mb-2">Our Values</h3>
+            <p>Sustainability, Innovation, Customer-Centricity, and Inclusiveness.</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border hover:shadow-lg transition">
+            <FaPhoneAlt className="text-yellow-600 text-3xl mx-auto mb-3" />
+            <h3 className="font-bold text-xl mb-2">Contact Info</h3>
+            <p className="mb-1"><FaEnvelope className="inline mr-2" /> support@bikezone.com</p>
+            <p><FaPhoneAlt className="inline mr-2" /> +880 1234 567 890</p>
+          </div>
+        </section>
+
+        {/* Quote Section */}
+        <section className="bg-blue-600 text-white text-center px-6 py-10 rounded-2xl shadow-md mb-16">
+          <blockquote className="italic text-xl max-w-2xl mx-auto">
+            “Life is like riding a bicycle. To keep your balance, you must keep moving.”
+          </blockquote>
+          <p className="mt-4 font-semibold">– Albert Einstein</p>
+        </section>
+
+        {/* Meet the Team */}
+        <section className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Meet the Team</h2>
+          <FaUsers className="text-4xl text-indigo-600 mx-auto mb-4" />
+          <p className="text-gray-700 max-w-xl mx-auto">
+            Our team is made up of passionate riders, expert mechanics, and support staff who are here to help you get the most out of your biking experience. We ride, repair, and relate — because we care.
+          </p>
+        </section>
       </main>
     </div>
   );
