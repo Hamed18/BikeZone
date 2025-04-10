@@ -29,10 +29,18 @@ const userApi = baseApi.injectEndpoints({
     }),
     updateUserActiveStatus: builder.mutation({
       query: (id) => {
-        console.log("from userApi", id);
         return {
           url: `/user/activation/${id}`,
           method: "PATCH",
+        };
+      },
+    }),
+    updatePassword: builder.mutation({
+      query: ({ id, data }) => {
+        return {
+          url: `/user/update-password/${id}`,
+          method: "PATCH",
+          body: data,
         };
       },
     }),
@@ -44,4 +52,5 @@ export const {
   useUpdateUserActiveStatusMutation,
   useGeSingletUserQuery,
   useUpdateProfileMutation,
+  useUpdatePasswordMutation,
 } = userApi;
