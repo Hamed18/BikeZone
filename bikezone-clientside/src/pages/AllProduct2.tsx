@@ -13,6 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { Slider } from "@/components/ui/slider";
+import Marquee from "./home/Marquee";
 
 const demoProducts = [
   {
@@ -157,6 +158,9 @@ const AllProducts2 = () => {
 
   return (
     <div className="py-4 max-w-7xl mx-auto px-4">
+      {/* Marquee Section */}
+      <Marquee />
+      
       <h3 className="text-2xl font-bold mb-6">Products</h3>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
