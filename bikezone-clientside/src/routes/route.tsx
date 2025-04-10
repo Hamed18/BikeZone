@@ -14,6 +14,8 @@ import ProductDetails from "@/pages/home/Product/ProductDetails";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import UserDash from "@/pages/user/UserDash";
+import UserOrder from "@/pages/user/UserOrder";
+import UserProfile from "@/pages/user/UserProfile";
 import { createBrowserRouter } from "react-router-dom";
 
 export const routes = createBrowserRouter([
@@ -76,6 +78,14 @@ export const routes = createBrowserRouter([
       {
         path: "dash",
         element: <UserDash />,
+      },
+      {
+        path: "profile",
+        element: <UserProfile />,
+      },
+      {
+        path: "orders",
+        element: <UserOrder />,
       },
     ],
   },

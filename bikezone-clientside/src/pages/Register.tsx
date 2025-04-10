@@ -18,14 +18,14 @@ import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { Loader } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+  name: z.string().min(3, {
+    message: "Name must be at least 3 characters.",
   }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
+  password: z.string().min(3, {
+    message: "Password must be at least 3 characters.",
   }),
 });
 
@@ -42,11 +42,19 @@ const Register = () => {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const toastId = toast.loading("User creating....");
 
     try {
-      register(data);
+      const res = await register(data);
+
+      if (res?.error?.data?.success == false) {
+        toast.success(res?.error?.data?.message || "User Not Registered!", {
+          id: toastId,
+        });
+        return console.log(res.error.data);
+      }
+
       form.reset();
       navigate("/login");
       toast.success("User Registered!", { id: toastId });
@@ -54,7 +62,7 @@ const Register = () => {
       console.error("Registration error:", error);
       toast.error("User not register!", { id: toastId });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">

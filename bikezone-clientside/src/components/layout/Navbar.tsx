@@ -17,6 +17,7 @@ type NavItem = {
 const Navbar = () => {
   const user = useAppSelector(selectCurrentUser);
 
+
   const [isOpen, setIsOpen] = useState(false);
   // const user = false; // This should come from your auth context
 

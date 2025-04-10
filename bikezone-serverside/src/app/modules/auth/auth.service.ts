@@ -5,6 +5,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const register = async (payload: IUser) => {
+  const user = await User.findOne({ email: payload.email });
+
+  if (user) {
+    throw new Error("This email already registered");
+  }
+
   const result = await User.create(payload);
   return result;
 };

@@ -21,11 +21,11 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setUser } from "@/redux/features/auth/authSlice";
 
 const formSchema = z.object({
-  email: z.string().min(2, {
-    message: "Email must be at least 2 characters.",
+  email: z.string().min(3, {
+    message: "Email must be at least 3 characters.",
   }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
+  password: z.string().min(3, {
+    message: "Password must be at least 3 characters.",
   }),
 });
 
@@ -43,7 +43,7 @@ const Login = () => {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const toastId = toast.loading("User Login....");
 
     try {
@@ -58,9 +58,11 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("User not logged in!", { id: toastId });
+      toast.error(error?.data?.message || "User not logged in!", {
+        id: toastId,
+      });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">

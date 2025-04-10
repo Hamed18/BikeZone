@@ -7,22 +7,30 @@ import {
   // DropdownMenuLabel,
   // DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
+  // DropdownMenuShortcut,
   // DropdownMenuSub,
   // DropdownMenuSubContent,
   // DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useGeSingletUserQuery } from "@/redux/features/user/userApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
-import { LogOut } from "lucide-react";
+import { Loader, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const LoginMenu = () => {
   const user = useAppSelector(selectCurrentUser);
   const role: string = user?.role;
+
+  const {
+    data: userData,
+    isLoading: userLoading,
+  } = useGeSingletUserQuery(user?._id, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const dispatch = useAppDispatch();
   const handleLogout = () => {
@@ -34,7 +42,7 @@ const LoginMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>{user?.name}</Button>
+        <Button> {userLoading ? <Loader /> : userData?.data?.name}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>
@@ -61,7 +69,10 @@ const LoginMenu = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="flex justify-between cursor-pointer" onClick={() => handleLogout()}>
+        <DropdownMenuItem
+          className="flex justify-between cursor-pointer"
+          onClick={() => handleLogout()}
+        >
           Log out <LogOut />
         </DropdownMenuItem>
       </DropdownMenuContent>
