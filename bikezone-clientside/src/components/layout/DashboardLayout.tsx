@@ -44,7 +44,7 @@ const DashboardLayout = () => {
     { name: "Dashboard", icon: LayoutDashboard, href: "/user/dash" },
     { name: "Profile", icon: User, href: "/user/profile" },
     { name: "My Orders", icon: Package, href: "/user/orders" },
-    { name: "Payments", icon: CreditCard, href: "/user/payments" },
+    // { name: "Payments", icon: CreditCard, href: "/user/payments" },
   ];
 
   const currentItems = role === "admin" ? adminItems : userItems;
