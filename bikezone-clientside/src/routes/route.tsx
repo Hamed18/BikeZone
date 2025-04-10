@@ -9,6 +9,7 @@ import ManageProducts from "@/pages/admin/ManageProducts";
 import ManageUsers from "@/pages/admin/ManageUsers";
 // import AllProducts2 from "@/pages/AllProduct2";
 import AllProducts from "@/pages/AllProducts";
+import Checkout from "@/pages/Checkout";
 import Home from "@/pages/home/Home";
 import ProductDetails from "@/pages/home/Product/ProductDetails";
 import Login from "@/pages/Login";
@@ -88,6 +89,10 @@ export const routes = createBrowserRouter([
         element: <UserOrder />,
       },
     ],
+  },
+  {
+    path: "/checkout/:id",
+    element: <Checkout />,
   },
   {
     path: "/login",
