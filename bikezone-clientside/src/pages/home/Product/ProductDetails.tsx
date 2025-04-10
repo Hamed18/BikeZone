@@ -39,7 +39,7 @@ const ProductDetails = () => {
             <p className="">Brand : {product.brand}</p>
             <p className="mt-4">{product.description}</p>
           </div>
-          <Button>Checkout</Button>
+          <Button>Buy Now</Button>
         </div>
       </div>
     </div>
