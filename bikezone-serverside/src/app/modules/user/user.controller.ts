@@ -46,6 +46,30 @@ const updateUser = async (req: Request, res: Response) => {
     data: result,
   });
 };
+const updatePassword = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const { currentPassword, newPassword } = req.body;
+
+  // Validate required fields
+  if (!currentPassword || !newPassword) {
+    return sendResponse(res, {
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: "Both currentPassword and newPassword are required",
+      data: {},
+    });
+  }
+
+  const result = await userService.updatePassword(userId, {
+    currentPassword,
+    newPassword,
+  });
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: "Password updated successfully",
+    data: result,
+  });
+});
 
 const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.userId;
@@ -73,4 +97,5 @@ export const userController = {
   updateUser,
   deleteUser,
   activationUser,
+  updatePassword,
 };
