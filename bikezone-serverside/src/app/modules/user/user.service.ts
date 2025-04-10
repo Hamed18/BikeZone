@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { IUser } from "./user.interface";
 import User from "./user.model";
 
@@ -22,6 +23,44 @@ const updateUser = async (id: string, data: IUser) => {
     new: true,
   });
   return result;
+};
+
+const updatePassword = async (
+  userId: string,
+  payload: { currentPassword: string; newPassword: string }
+) => {
+  const user = await User.findById(userId).select("+password");
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const isPasswordMatched = await bcrypt.compare(
+    payload.currentPassword,
+    user.password
+  );
+
+  if (!isPasswordMatched) {
+    throw new Error("Current password is incorrect");
+  }
+
+  if (payload.currentPassword === payload.newPassword) {
+    throw new Error("New password cannot be same as current password");
+  }
+
+  const hashedNewPassword = await bcrypt.hash(payload.newPassword, 10);
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { password: hashedNewPassword },
+    { new: true }
+  ).select("-password");
+
+  if (!updatedUser) {
+    throw new Error("Failed to update password");
+  }
+
+  return updatedUser;
 };
 
 const deleteUser = async (id: string) => {
@@ -50,4 +89,5 @@ export const userService = {
   updateUser,
   deleteUser,
   activationUser,
+  updatePassword,
 };

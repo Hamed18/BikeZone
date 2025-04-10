@@ -20,5 +20,6 @@ userRouter.patch(
   userController.activationUser
 );
 userRouter.delete("/:userId", auth(USER_ROLE.admin), userController.deleteUser);
+userRouter.patch("/update-password/:userId", userController.updatePassword);
 
 export default userRouter;
