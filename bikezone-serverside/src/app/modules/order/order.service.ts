@@ -66,6 +66,19 @@ const getOrder = async () => {
   }
 
 // Payment Integration
+/*
+const shurjopayPayload = {
+  amount: totalPrice,
+  order_id: order._id,
+  currency: "BDT",
+  customer_name: user.name,
+  customer_address: user.address,
+  customer_email: user.email,
+  customer_phone: user.phone,
+  customer_city: user.city,
+ // client_ip,
+};   
+*/
 
 
 export const orderService={
