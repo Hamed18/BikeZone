@@ -14,11 +14,8 @@ const ProductCard = () => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {data?.data?.slice(0, 6).map((product: TProduct) => (
-          <div
-            className="max-w-md border rounded-2xl w-full shadow-md"
-            key={product?._id}
-          >
+        {data?.data?.slice(0, 3).map((product: TProduct) => (
+          <div className=" max-w-md w-full shadow-md" key={product?._id}>
             <div className="relative">
               <img
                 alt="Banner Profile"

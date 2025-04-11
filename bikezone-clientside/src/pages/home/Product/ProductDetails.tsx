@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ProductDetails = () => {
   const { productId } = useParams();
@@ -39,7 +39,9 @@ const ProductDetails = () => {
             <p className="">Brand : {product.brand}</p>
             <p className="mt-4">{product.description}</p>
           </div>
-          <Button>Buy Now</Button>
+          <Link to={`/checkout/${product?._id}`}>
+            <Button>Buy Now</Button>
+          </Link>
         </div>
       </div>
     </div>
