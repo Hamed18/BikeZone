@@ -7,7 +7,9 @@ const Contact = () => {
       <SectionBanner heading="Contact Us" subHeading="Contact Us" />
       <div className="max-w-7xl grid grid-cols-1 md:grid-cols-2 w-full px-4 md:px-0 mx-auto gap-10 md:gap-32 min-h-screen justify-center items-center">
         <div>
-          <h1 className="text-3xl font-bold ">Contact Us</h1>
+          <h2 className="text-2xl pt-4 md:pt-0 md:text-3xl font-bold ">
+            Contact Us
+          </h2>
           <p className="pt-6 pb-12 ">
             We'd love to hear from you! Whether you have questions about our
             bikes, need help with maintenance, or want to explore the latest
