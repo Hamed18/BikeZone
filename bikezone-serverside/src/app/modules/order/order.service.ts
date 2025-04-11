@@ -64,6 +64,10 @@ const getOrder = async () => {
     const result = await Order.findByIdAndDelete(id)
     return result
   }
+
+// Payment Integration
+
+
 export const orderService={
     createOrder,
     getOrder,
