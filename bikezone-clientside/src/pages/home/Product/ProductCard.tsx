@@ -12,8 +12,7 @@ const ProductCard = () => {
     return <LoadAnimation />;
   }
   return (
-    <div>
-      {" "}
+    <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {data?.data?.slice(0, 3).map((product: TProduct) => (
           <div className=" max-w-md w-full shadow-md" key={product?._id}>
@@ -21,7 +20,7 @@ const ProductCard = () => {
               <img
                 alt="Banner Profile"
                 src={product.image}
-                className="w-full rounded-none h-52"
+                className="w-full rounded-t-2xl h-52"
               />
 
               <div className="absolute bg-black text-base text-white flex justify-center items-center bottom-0 left-2/4 transform -translate-x-1/2 translate-y-1/2 w-20 h-20 rounded-full border-2 font-extrabold border-white">
@@ -70,7 +69,7 @@ const ProductCard = () => {
           <Button>View All</Button>
         </Link>
       </div>
-    </div>
+    </>
   );
 };
 

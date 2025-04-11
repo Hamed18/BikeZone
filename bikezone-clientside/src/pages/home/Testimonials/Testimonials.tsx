@@ -1,5 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./Testimonials.css";
+import { BiSolidQuoteLeft } from "react-icons/bi";
 
 // Import Swiper styles
 import "swiper/css";
@@ -73,7 +74,8 @@ const Testimonials = () => {
           {reviews.map((review, index) => (
             <SwiperSlide key={index}>
               <div className="px-2 py-6 md:py-24 flex items-center justify-center text-white testimonial-background">
-                <div className="">
+                <div>
+                  <BiSolidQuoteLeft className="text-[#E81938] w-full mx-auto text-6xl" />
                   <p className="text-base max-w-2xl italic font-normal line-clamp-4 brightness-80">
                     {review.review}
                   </p>
