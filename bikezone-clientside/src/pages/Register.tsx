@@ -42,25 +42,49 @@ const Register = () => {
     },
   });
 
+  interface ApiResponse {
+    error?: {
+      data?: {
+        success?: boolean;
+        message?: string;
+        // Add other possible error response fields here
+      };
+    };
+    // Add other possible success response fields here
+  }
+  
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const toastId = toast.loading("User creating....");
-
+  
     try {
-      const res = await register(data);
-
-      if (res?.error?.data?.success == false) {
-        toast.success(res?.error?.data?.message || "User Not Registered!", {
-          id: toastId,
+      const res = await register(data) as ApiResponse;
+  
+      if (res?.error?.data?.success === false) {
+        // Show error message from response or fallback
+        toast.error(res?.error?.data?.message || "User registration failed!", { 
+          id: toastId 
         });
-        return console.log(res.error.data);
+        console.log("Registration error:", res.error.data);
+        return;
       }
-
+  
       form.reset();
       navigate("/login");
       toast.success("User Registered!", { id: toastId });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Registration error:", error);
-      toast.error("User not register!", { id: toastId });
+      
+      // Handle different error types
+      let errorMessage = "User registration failed!";
+      
+      if (typeof error === 'object' && error !== null) {
+        const apiError = error as { data?: { message?: string } };
+        if (apiError?.data?.message) {
+          errorMessage = apiError.data.message;
+        }
+      }
+  
+      toast.error(errorMessage, { id: toastId });
     }
   };
 

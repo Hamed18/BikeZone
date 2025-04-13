@@ -9,7 +9,6 @@ import {
   ChevronLeft,
   User,
   Package,
-  CreditCard,
   LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,7 +23,7 @@ const DashboardLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
-  const role: string = user?.role;
+  const role: string | undefined = user?.role;
   const dispatch = useAppDispatch();
   const handleLogout = () => {
     const toastId = toast.loading("Logging out....");
@@ -44,7 +43,6 @@ const DashboardLayout = () => {
     { name: "Dashboard", icon: LayoutDashboard, href: "/user/dash" },
     { name: "Profile", icon: User, href: "/user/profile" },
     { name: "My Orders", icon: Package, href: "/user/orders" },
-    // { name: "Payments", icon: CreditCard, href: "/user/payments" },
   ];
 
   const currentItems = role === "admin" ? adminItems : userItems;

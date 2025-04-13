@@ -3,6 +3,7 @@ import { userService } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
+import mongoose from "mongoose";
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -24,13 +25,40 @@ const getUser = async (req: Request, res: Response) => {
 };
 
 const getSingleUser = async (req: Request, res: Response) => {
-  const userId = req.params.userId;
+  const { userId } = req.params;
+
+  // Validate userId exists
+  if (!userId) {
+    return sendResponse(res, {
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: "User ID is required",
+      data: {},
+    });
+  }
+
+  // Validate proper ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return sendResponse(res, {
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: "Invalid user ID format",
+      data: {},
+    });
+  }
 
   const result = await userService.getSingleUser(userId);
 
+  // If service returns null (user not found)
+  if (!result) {
+    return sendResponse(res, {
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: "User not found",
+      data: {},
+    });
+  }
+
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    message: "User get successfully",
+    message: "User retrieved successfully",
     data: result,
   });
 };

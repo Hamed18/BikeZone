@@ -19,6 +19,7 @@ import {
 } from "@/redux/features/user/userApi";
 import { toast } from "sonner";
 import LoadAnimation from "@/components/menu/LoadAnimation";
+import { ApiError } from "@/types/global.type";
 
 const UserProfile = () => {
   const currentData = useAppSelector(selectCurrentUser);
@@ -108,15 +109,13 @@ const UserProfile = () => {
         confirmPassword: "",
       });
       setShowPasswordForm(false);
-    } catch (error) {
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
       toast.error(
-        error?.data?.message ||
+        apiError?.data?.message ||
           "Failed to update password. Check your current password.",
-        {
-          id: toastId,
-        }
+        { id: toastId }
       );
-      console.error("Password update error:", error);
     }
   };
 
