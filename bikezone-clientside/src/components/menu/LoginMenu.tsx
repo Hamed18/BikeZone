@@ -23,7 +23,7 @@ import { toast } from "sonner";
 
 const LoginMenu = () => {
   const user = useAppSelector(selectCurrentUser);
-  const role: string = user?.role;
+  const role: string | undefined = user?.role;
 
   const {
     data: userData,

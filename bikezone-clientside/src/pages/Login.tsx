@@ -45,7 +45,7 @@ const Login = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const toastId = toast.loading("User Login....");
-
+  
     try {
       const res = await loginUser(data).unwrap();
       dispatch(setUser({ user: res.data, token: res.token }));
@@ -56,11 +56,37 @@ const Login = () => {
       } else {
         navigate("/");
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.error("Login error:", error);
-      toast.error(error?.data?.message || "User not logged in!", {
-        id: toastId,
-      });
+      
+      // Handle different error structures
+      let errorMessage = "Login failed. Please try again.";
+  
+      // Check for Zod validation errors
+      if (error?.data?.error?.name === 'ZodError') {
+        const firstError = error.data.error.issues[0];
+        errorMessage = firstError.message || "Validation error";
+      } 
+      // Check for the specific stringified JSON case
+      else if (error?.data?.message) {
+        try {
+          const parsedMessages = JSON.parse(error.data.message);
+          if (Array.isArray(parsedMessages) && parsedMessages[0]?.message) {
+            errorMessage = parsedMessages[0].message;
+          } else {
+            errorMessage = error.data.message;
+          }
+        } catch {
+          errorMessage = error.data.message;
+        }
+      }
+      // Check for issues array format
+      else if (error?.data?.issues?.length > 0) {
+        errorMessage = error.data.issues[0].message;
+      }
+  
+      toast.error(errorMessage, { id: toastId });
     }
   };
 

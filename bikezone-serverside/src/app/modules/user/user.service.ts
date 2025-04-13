@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { IUser } from "./user.interface";
 import User from "./user.model";
+import mongoose from "mongoose";
 
 const createAdmin = async (payload: IUser): Promise<IUser> => {
   payload.role = "admin";
@@ -13,9 +14,15 @@ const getUser = async () => {
   const result = await User.find();
   return result;
 };
+
 const getSingleUser = async (id: string) => {
-  const result = await User.findById(id);
-  return result;
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
 };
 
 const updateUser = async (id: string, data: IUser) => {
