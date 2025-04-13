@@ -2,7 +2,8 @@ import mongoose from "mongoose"
 import { IOrder } from "./order.interface"
 import Product from "../product/product.model"
 import Order from "./order.model"
-import User from "../user/user.model"  
+import User from "../user/user.model"
+import { orderUtils } from "./order.utils"
 
 const createOrder = async (payload: IOrder): Promise<IOrder> => {
   const session = await mongoose.startSession()
@@ -30,10 +31,11 @@ const createOrder = async (payload: IOrder): Promise<IOrder> => {
       throw new Error('Not enough products available')
     }
 
-    const order = await Order.create([payload], { session })
+    const createdOrders = await Order.create([payload], { session })
+    const order = createdOrders[0]
 
     const updateProduct = await Product.findByIdAndUpdate(
-      order[0].product,
+      order.product,
       { $inc: { quantity: -orderQuantity } },
       { new: true, session }
     )
@@ -45,20 +47,33 @@ const createOrder = async (payload: IOrder): Promise<IOrder> => {
     // ✅ Payment Integration 
     const shurjopayPayload = {
       amount: totalPrice,
-      order_id: order[0]._id,
+      order_id: order._id,
       currency: "BDT",
       customer_name: user.name,
       customer_email: user.email,
-      customer_address: "N\A",
-      customer_phone: "N\A",
+      customer_address: "N\\A",
+      customer_phone: "N\\A",
       client_ip: client_ip || "127.0.0.1",
     }
 
-    // send this payload to ShurjoPay API here
+    // Send this payload to ShurjoPay API here
+    const payment = await orderUtils.makePaymentAsync(shurjopayPayload)
+
+    if (payment?.transactionStatus) {
+      await order.updateOne(
+        {
+          transaction: {
+            id: payment.sp_order_id,
+            transactionStatus: payment.transactionStatus,
+          },
+        },
+        { session }
+      )
+    }
 
     await session.commitTransaction()
     await session.endSession()
-    return order[0]
+    return order
   } catch (error) {
     await session.abortTransaction()
     await session.endSession()
@@ -70,6 +85,7 @@ const getOrder = async () => {
   const result = await Order.find()
   return result
 }
+
 const getSingleOrder = async (id: string) => {
   const result = await Order.findById(id)
   return result
