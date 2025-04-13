@@ -5,7 +5,7 @@ import Order from "./order.model"
 import User from "../user/user.model"
 import { orderUtils } from "./order.utils"
 
-const createOrder = async (payload: IOrder): Promise<IOrder> => {
+const createOrder = async (payload: IOrder): Promise<string> => {
   const session = await mongoose.startSession()
   session.startTransaction()
 
@@ -25,14 +25,14 @@ const createOrder = async (payload: IOrder): Promise<IOrder> => {
     const totalPrice = requiredProduct.price * orderQuantity
 
     payload.totalPrice = totalPrice
-    payload.orderStatus = 'pending'
+    payload.orderStatus = 'Pending'
 
     if (requiredProduct.quantity < orderQuantity) {
       throw new Error('Not enough products available')
     }
 
     const createdOrders = await Order.create([payload], { session })
-    const order = createdOrders[0]
+    let order = createdOrders[0]
 
     const updateProduct = await Product.findByIdAndUpdate(
       order.product,
@@ -57,10 +57,11 @@ const createOrder = async (payload: IOrder): Promise<IOrder> => {
     }
 
     // Send this payload to ShurjoPay API here
-    const payment = await orderUtils.makePaymentAsync(shurjopayPayload)
+    const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
+    // return {order,payment};
 
     if (payment?.transactionStatus) {
-      await order.updateOne(
+      order = await order.updateOne(
         {
           transaction: {
             id: payment.sp_order_id,
@@ -71,9 +72,12 @@ const createOrder = async (payload: IOrder): Promise<IOrder> => {
       )
     }
 
+
     await session.commitTransaction()
     await session.endSession()
-    return order
+
+    return payment.checkout_url; //
+
   } catch (error) {
     await session.abortTransaction()
     await session.endSession()
@@ -103,10 +107,42 @@ const deleteOrder = async (id: string) => {
   return result
 }
 
+// verify payment
+const verifyPayment = async (order_id: string) => {
+  const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
+
+  if (verifiedPayment.length) {
+    await Order.findOneAndUpdate(
+      {
+        "transaction.id": order_id,
+      },
+      {
+        "transaction.bank_status": verifiedPayment[0].bank_status,
+        "transaction.sp_code": verifiedPayment[0].sp_code,
+        "transaction.sp_message": verifiedPayment[0].sp_message,
+        "transaction.transactionStatus": verifiedPayment[0].transaction_status,
+        "transaction.method": verifiedPayment[0].method,
+        "transaction.date_time": verifiedPayment[0].date_time,
+        orderStatus:
+          verifiedPayment[0].bank_status == "Success"
+            ? "Paid"
+            : verifiedPayment[0].bank_status == "Failed"
+            ? "Pending"
+            : verifiedPayment[0].bank_status == "Cancel"
+            ? "Cancelled"
+            : "",
+      }
+    );
+  }
+
+  return verifiedPayment;
+};
+
 export const orderService = {
   createOrder,
   getOrder,
   getSingleOrder,
   updateOrder,
   deleteOrder,
+  verifyPayment
 }
