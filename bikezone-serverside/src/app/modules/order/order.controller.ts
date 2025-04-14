@@ -57,15 +57,19 @@ const verifyPayment = catchAsync(async (req, res) => {
   const order = await orderService.verifyPayment(req.query.order_id as string);
 
   sendResponse(res, {
+
     statusCode: httpStatus.CREATED,
+
     message: "Order verified successfully",
     data: order,
   });
 });
+
 export const orderController ={
     createOrder,
     getOrder,
     getSingleOrder,
    verifyPayment,
     deleteOrder,
+    verifyPayment
 }

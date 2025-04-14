@@ -1,4 +1,5 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import { IUser } from "../user/user.interface"; //
 
 export interface IOrder {
     user : mongoose.Schema.Types.ObjectId
@@ -22,3 +23,4 @@ export interface IOrder {
       createdAt?: Date;
       updatedAt?: Date;
 } 
+

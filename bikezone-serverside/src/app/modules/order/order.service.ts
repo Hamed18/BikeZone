@@ -1,7 +1,8 @@
 import mongoose from "mongoose"
 import Product from "../product/product.model"
 import Order from "./order.model"
-
+import User from "../user/user.model"
+import { orderUtils } from "./order.utils"
 import { orderUtils } from "./order.utils";
 import { IUser } from "../user/user.interface"
 import AppError from "../../errors/AppError"
@@ -9,7 +10,6 @@ interface IPament {
   orderId: string,
   user: string,
 }
-
 
 const createOrder = async (
   user: IUser,
@@ -26,7 +26,6 @@ try{
   }
   const totalPrice = requiredProduct.price * orderQuantity
   
-
   let order = await Order.create({
     user,
     product: requiredProduct._id,

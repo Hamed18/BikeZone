@@ -1,6 +1,7 @@
 import Shurjopay, { PaymentResponse, VerificationResponse } from "shurjopay";
 import config from "../../config";
 
+// Initialize Shurjopay instance
 const shurjopay = new Shurjopay();
 
 shurjopay.config(
@@ -23,20 +24,6 @@ const makePaymentAsync = async (
       (error) => reject(error)
     );
   });
-
-  //   const paymentResult = await shurjopay.makePayment(
-  //     paymentPayload,
-  //     (response) => {
-  //       sendResponse(res, {
-  //         statusCode: 200,
-  //         message: "Order placed successfully",
-  //         data: response,
-  //       });
-  //     },
-  //     (error) => console.log(error)
-  //   );
-  //   return paymentResult;
-};
 
 const verifyPaymentAsync = (
   order_id: string
