@@ -3,11 +3,13 @@ import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import { orderService } from "./order.service";
+import httpStatus from "http-status";
+
 
 const createOrder = catchAsync(async (req: Request, res: Response)=>{
-   
+   const user =req.user
     const payload = req.body
-    const result = await orderService.createOrder(payload)
+    const result = await orderService.createOrder(user, payload, req.ip!)
     
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
@@ -15,13 +17,14 @@ const createOrder = catchAsync(async (req: Request, res: Response)=>{
       data: result,
     })
 })
+
 const getOrder = catchAsync(async (req: Request, res: Response) => {
     
     const result = await orderService.getOrder()
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
-      message: 'Product got successfully',
+      message: 'Order got successfully',
       data: result,
     })
 })
@@ -38,17 +41,18 @@ const getOrder = catchAsync(async (req: Request, res: Response) => {
     })
 })
   
-  const updateOrder = catchAsync(async (req: Request, res: Response) => {
+//   const updateOrder = catchAsync(async (req: Request, res: Response) => {
     
-    const orderId = req.params.orderId
-    const body = req.body
-    const result = await orderService.updateOrder(orderId, body)
-    sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
-      message: 'User updated successfully',
-      data: result,
-    })
-})
+//     const orderId = req.params.orderId
+//     const body = req.body
+//     const ip= req.ip
+//     const result = await orderService.paymentOne(orderId, body, ip!)
+//     sendResponse(res, {
+//       statusCode: StatusCodes.CREATED,
+//       message: 'User updated successfully',
+//       data: result,
+//     })
+// })
   
   const deleteOrder = catchAsync(async (req: Request, res: Response) => {
   
@@ -62,10 +66,20 @@ const getOrder = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const verifyPayment = catchAsync(async (req, res) => {
+  const order = await orderService.verifyPayment(req.query.order_id as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    message: "Order verified successfully",
+    data: order,
+  });
+});
 export const orderController ={
     createOrder,
     getOrder,
     getSingleOrder,
-    updateOrder,
+    // updateOrder,
+   verifyPayment,
     deleteOrder,
 }
