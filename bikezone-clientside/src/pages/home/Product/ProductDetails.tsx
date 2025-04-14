@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
+import { toast } from "sonner";
 import { Link, useParams } from "react-router-dom";
+import { useCreateOrderMutation } from '@/redux/features/order/order';
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 
 const ProductDetails = () => {
+  const user = useAppSelector(selectCurrentUser);
+  console.log(user);
   const { productId } = useParams();
-  const { data, error, isLoading } = useGetAllProductsQuery(undefined);
+  const { data, error, isLoading, refetch } = useGetAllProductsQuery(undefined);
 
   console.log("Product ID from URL:", productId);
   console.log("Product data:", data);
@@ -15,6 +21,22 @@ const ProductDetails = () => {
     (prod: TProduct) => String(prod._id) === productId
   );
 
+  // order start
+  const [createOrder] =
+    useCreateOrderMutation();
+  const handleAddToOrder = async () => {
+    const result = await createOrder({
+      product: productId,
+      orderQuantity: 1
+     })
+    if(result?.data?.status){
+      toast.success("Order Successful!");
+      refetch()
+    }else{
+      toast.error("Not Order Successful!");
+    }
+  };
+  // order end
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading product details</div>;
   if (!product) return <div>Product not found</div>;
@@ -39,9 +61,12 @@ const ProductDetails = () => {
             <p className="">Brand : {product.brand}</p>
             <p className="mt-4">{product.description}</p>
           </div>
-          <Link to={`/checkout/${product?._id}`}>
+          {/* <Link to={`/checkout/${product?._id}`}> */}
+            <Button onClick={handleAddToOrder}>Buy Now</Button>
+          {/* </Link> */}
+          {/* <Link to={`/checkout/${product?._id}`}>
             <Button>Buy Now</Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>
