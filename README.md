@@ -1,149 +1,188 @@
-# Bike Shop Application
+# 🚲 Bike Zone - Bike Shop Application
 
-## Project Overview & Objective
+🔗 **Live Site:** [https://bike-zone-six.vercel.app/](https://bike-zone-six.vercel.app/)
 
-Create a **Bike Shop** application with user-friendly features, secure authentication, and smooth product management. Ensure the platform is responsive, error-free, and visually appealing.
+## 📝 Project Overview
 
----
-
-## Main Functionalities (45 Marks)
-
-### 1. User Registration & Authentication (Role-Based)
-
-- **Secure Registration and Login**:
-  - Users can register with the following fields: name, email, and password. By default, the registered user will have the "customer" role.
-  - Note: You will have to manually update a user to "admin." No need to implement a "super admin" functionality.
-  - Passwords must be securely hashed before storing in the database.
-  - Users can log in using their email and password.
-
-- **JWT (JSON Web Token)**:
-  - Generate a JWT token upon login for secure authentication.
-  - Store the token in **local storage** to maintain user sessions.
-
-- **Logout**:
-  - Clear the token from **local storage** upon logout and redirect the user to the login page.
+Bike Zone is a full-featured Bike Shop web application designed with a user-friendly interface, secure authentication, smooth product management, and responsive design. It offers both public and private routes tailored for customers and admins.
 
 ---
 
-### 2. Public Routes
+## 🎯 Objectives
 
-- **Home Page**:
-  - **Navbar**: Include a logo, favicon, navigation items, and buttons for login/signup and other interactions.
-  - **Banner**: Highlight your platform or special offers. A carousel can be used if desired.
-  - **Featured Products**: Display up to 6 products with a "View All" button. On clicking the "View All" button, the user will be redirected to the "All Products" Page.
-  - **Extra Section**: Add relevant e-commerce content, such as testimonials or blogs.
-  - **Footer**: Include essential links, social media icons, and contact details.
-
-- **All Products Page**:
-  - **Search Functionality**: Allow users to search by brand, bike name, or category.
-  - **Filters**: Include options for price range, model, brand, category, and availability.
-  - **Dynamic Results**: Results should be updated based on search terms or selected filters.
-  - **Product Cards**: Show details like name, brand, model, price, and category.
-  - **"View Details"** button for each product.
-
-- **Product Details Page**:
-  - Display the product image and detailed information.
-  - Provide a "Buy Now" button that redirects to the checkout page.
-
-- **About Page**:
-  - Create an informative page about your shop and its mission. Add any other relevant details.
+- Implement role-based authentication using JWT.
+- Build an intuitive UI with smooth product browsing, filtering, and searching.
+- Allow admins to manage products, users, and orders.
+- Enable users to place orders and track them.
+- Integrate secure payment with SurjoPay.
+- Ensure a responsive, error-free, and visually appealing user experience.
 
 ---
 
-### 3. Private Routes
+## ⚙️ Main Functionalities
 
-- **Checkout Page**:
-  - Users can place orders for products.
-  - Ensure the ordered quantity does not exceed the product stock.
-  - **Order Form**: Include product details, user details, total price calculation, and payment method.
-  - **Payment Integration**: Integrate SurjoPay as the payment gateway.
-  - Include an "Order Now" button to confirm the purchase.
+### 🔐 1. User Registration & Authentication
 
-- **Dashboard (Role-Based Access)**:
-  - **Admin Dashboard**:
-    - Features include managing users (e.g., deactivating accounts), managing products (CRUD), and managing orders (CRUD).
-  - **User Dashboard**:
-    - Features include viewing orders and managing profile settings.
-    - Allow users to update passwords (require current password for security).
+- Users register with: **Name, Email, Password** (default role: `customer`).
+- Passwords are securely hashed before storing in the database.
+- Login using email & password.
+- JWT token is generated on login and stored in local storage.
+- Logout clears the token and redirects to the login page.
+- Manual role update to `admin` (no super admin required).
 
 ---
 
-## UI/UX Design (15 Marks)
+### 🌍 2. Public Routes
 
-- **Responsive Design**:
-  - Ensure the platform works seamlessly on all screen sizes.
-  - Use proper alignment, typography, and intuitive layouts.
+#### 🏠 Home Page
 
-- **Error Handling**:
-  - Show user-friendly error messages for:
-    - Invalid login credentials.
-    - Registration errors (e.g., duplicate email).
-    - Failed operations (e.g., out-of-stock products).
+- **Navbar:** Logo, Favicon, Navigation, Login/Signup buttons.
+- **Banner:** Highlights platform or special offers (carousel supported).
+- **Featured Products:** Up to 6 products with a "View All" button.
+- **Extra Section:** Testimonials or blog features.
+- **Footer:** Links, social icons, contact info.
 
-- **Loading States**:
-  - Display spinners or loaders during API calls, such as on login or data fetch.
+#### 🛒 All Products Page
 
-- **Toasts**:
-  - Notify users of important actions (e.g., "Login successful," "Order placed," etc.).
+- **Search:** By brand, bike name, or category.
+- **Filters:** Price range, model, brand, category, availability.
+- **Dynamic Results:** Based on search/filter.
+- **Product Cards:** Show name, brand, model, price, category.
+- **View Details Button**
 
----
+#### 📄 Product Details Page
 
-## Recommendation Functionalities (Optional)
+- Detailed product information.
+- “Buy Now” button redirects to Checkout.
 
-### Track Order Section (Dashboard)
+#### ℹ️ About Page
 
-#### User Side:
-
-- **Track Order Status**:
-  - Display current order status (Pending, Processing, Shipped, Delivered) with a progress bar or step indicator.
-  - Show clear labels for each step in the process.
-
-- **Order Tracking Page**:
-  - Add a "Track My Order" page in the user dashboard.
-  - Show key order details:
-    - Order ID
-    - Product name, quantity, and price
-    - Estimated delivery date
-    - Current status
-
-#### Admin Side:
-
-- **Update Order Status**:
-  - Add a dropdown in the Admin Dashboard to update order statuses (Pending, Processing, Shipped, Delivered) and a field for giving the estimated delivery date.
-  - Ensure status changes are automatically visible to users.
+- Overview of the shop and mission.
 
 ---
 
-## Backend Requirements
+### 🔐 3. Private Routes
 
-- **Database**: MongoDB. Ensure schema includes:
-  - Users (with roles: customer, admin)
-  - Products (with details like name, brand, price, model, stock)
-  - Orders (with user reference, product details, total price, status)
+#### 💳 Checkout Page
 
-- **Authentication**:
-  - Implement user registration, login, JWT token generation, and logout.
-  - Secure password hashing and user session management.
+- Place orders (validates stock).
+- **Order Form:** Product + user details, total price, payment method.
+- **Payment Integration:** SurjoPay.
+- “Order Now” button confirms purchase.
 
-- **Product Management**:
-  - CRUD operations for products (create, read, update, delete).
+#### 🧑‍💼 Dashboard (Role-Based)
 
-- **Order Management**:
-  - CRUD operations for orders (create, read, update, delete).
-  - Ensure stock availability before placing orders.
+##### 👑 Admin Dashboard
 
-- **Payment Integration**:
-  - Integrate SurjoPay for payment processing.
+- Manage users (e.g., deactivate accounts).
+- Manage products (CRUD).
+- Manage orders (CRUD).
 
-- **Error Handling**:
-  - Implement consistent and user-friendly error responses for invalid login attempts, out-of-stock products, etc.
+##### 👤 User Dashboard
 
-- **Performance Optimization**:
-  - Optimize API responses and ensure smooth operation for large data loads.
+- View past orders.
+- Update profile & password (with current password check).
 
 ---
 
-## Additional Changes
+## 💅 UI/UX Design
 
-- Ensure the backend API supports pagination for product listings and order retrieval.
-- Add authentication middleware to secure private routes, such as the checkout and dashboard.
+### ✅ Responsive Design
+
+- Optimized for all screen sizes.
+
+### ⚠️ Error Handling
+
+- Friendly error messages for:
+  - Invalid login credentials.
+  - Duplicate registration.
+  - Failed actions (e.g., out-of-stock).
+
+### ⏳ Loading States
+
+- Loaders/spinners during API operations.
+
+### 🔔 Toast Notifications
+
+- Example: “Login successful”, “Order placed”, etc.
+
+---
+
+## 💡 Recommended Functionalities (Optional)
+
+### 🚚 Order Tracking (User Side)
+
+- Track order status: **Pending → Processing → Shipped → Delivered**.
+- Visual step indicator/progress bar.
+- "Track My Order" page includes:
+  - Order ID
+  - Product details
+  - Estimated delivery date
+  - Current status
+
+### 🛠 Update Order Status (Admin Side)
+
+- Dropdown to update order status.
+- Field for estimated delivery date.
+- Real-time status updates for users.
+
+---
+
+## 🛠 Backend Requirements
+
+### 🗃️ Database: MongoDB
+
+#### Schemas:
+
+- **Users:** `name`, `email`, `password`, `role`
+- **Products:** `name`, `brand`, `price`, `model`, `stock`, etc.
+- **Orders:** `userRef`, `product details`, `totalPrice`, `status`
+
+### 🔐 Authentication
+
+- JWT-based user registration/login/logout.
+- Hashed password storage.
+- Middleware to protect private routes.
+
+### 📦 Product Management
+
+- Full CRUD functionality.
+
+### 🧾 Order Management
+
+- Create, Read, Update, Delete.
+- Check stock before placing order.
+
+### 💳 Payment Integration
+
+- Integrated with **SurjoPay**.
+
+### ⚠️ Error Handling
+
+- Consistent and meaningful error responses for:
+  - Invalid login
+  - Duplicate registration
+  - Out-of-stock orders
+  - API failures
+
+---
+
+## 🚀 Performance & Extra Features
+
+- API pagination for products and orders.
+- Optimized data fetching.
+- Secure and scalable backend.
+- Protected dashboard routes using JWT middleware.
+
+---
+
+## 👨‍💻 Technologies Used
+
+- **Frontend:** React, TypeScript, Tailwind CSS, Vite, React Router
+- **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, Bcrypt
+- **Payment Gateway:** SurjoPay
+- **Deployment:** Vercel (Client) & Render/Other (Server)
+
+---
+
+Feel free to fork, clone, or contribute! Happy riding 🚴‍♀️🚴‍♂️
