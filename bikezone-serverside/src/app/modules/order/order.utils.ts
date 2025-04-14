@@ -24,7 +24,7 @@ const makePaymentAsync = async (
       (error) => reject(error)
     );
   });
-
+}
 const verifyPaymentAsync = (
   order_id: string
 ): Promise<VerificationResponse[]> => {
