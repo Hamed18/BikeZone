@@ -9,6 +9,7 @@ productRouter.post(
   validateRequest(ProductValidation.productValidationSchema),
   productController.createProduct
 );
+
 productRouter.get("/products", productController.getProduct);
 productRouter.get("/products/:productId", productController.getSingleProduct);
 productRouter.put("/products/:productId", productController.updateProduct);

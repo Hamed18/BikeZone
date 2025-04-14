@@ -3,11 +3,13 @@ import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import { orderService } from "./order.service";
+import httpStatus from "http-status";
+
 
 const createOrder = catchAsync(async (req: Request, res: Response)=>{
-   
+   const user =req.user
     const payload = req.body
-    const result = await orderService.createOrder(payload)
+    const result = await orderService.createOrder(user, payload, req.ip!)
     
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
@@ -15,13 +17,14 @@ const createOrder = catchAsync(async (req: Request, res: Response)=>{
       data: result,
     })
 })
+
 const getOrder = catchAsync(async (req: Request, res: Response) => {
     
     const result = await orderService.getOrder()
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
-      message: 'Product got successfully',
+      message: 'Order got successfully',
       data: result,
     })
 })
@@ -37,19 +40,7 @@ const getOrder = catchAsync(async (req: Request, res: Response) => {
       data: result,
     })
 })
-  
-  const updateOrder = catchAsync(async (req: Request, res: Response) => {
-    
-    const orderId = req.params.orderId
-    const body = req.body
-    const result = await orderService.updateOrder(orderId, body)
-    sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
-      message: 'User updated successfully',
-      data: result,
-    })
-})
-  
+
   const deleteOrder = catchAsync(async (req: Request, res: Response) => {
   
     const orderId = req.params.orderId
@@ -66,7 +57,9 @@ const verifyPayment = catchAsync(async (req, res) => {
   const order = await orderService.verifyPayment(req.query.order_id as string);
 
   sendResponse(res, {
-    statusCode: StatusCodes.CREATED,
+
+    statusCode: httpStatus.CREATED,
+
     message: "Order verified successfully",
     data: order,
   });
@@ -76,7 +69,7 @@ export const orderController ={
     createOrder,
     getOrder,
     getSingleOrder,
-    updateOrder,
+   verifyPayment,
     deleteOrder,
     verifyPayment
 }

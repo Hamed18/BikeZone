@@ -1,11 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
-import { Link, useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import OrderCart from "@/pages/order/OrderCart";
 
 const ProductDetails = () => {
-  const { productId } = useParams();
-  const { data, error, isLoading } = useGetAllProductsQuery(undefined);
+  const user = useAppSelector(selectCurrentUser);
+  console.log(user);
+  const { productId} = useParams();
+  const { data, error, isLoading} = useGetAllProductsQuery(undefined);
 
   console.log("Product ID from URL:", productId);
   console.log("Product data:", data);
@@ -39,9 +43,7 @@ const ProductDetails = () => {
             <p className="">Brand : {product.brand}</p>
             <p className="mt-4">{product.description}</p>
           </div>
-          <Link to={`/checkout/${product?._id}`}>
-            <Button>Buy Now</Button>
-          </Link>
+            <OrderCart id={`${productId}`}/>
         </div>
       </div>
     </div>

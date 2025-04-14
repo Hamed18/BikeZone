@@ -11,15 +11,15 @@ const orderSchema = new Schema<IOrder>({
         type: Schema.Types.ObjectId,
         required: true
     },
-    orderQuantity:{
-        type: Number,
-        required: true
-    },
+    // orderQuantity:{
+    //     type: Number,
+    //     required: true
+    // },
     totalPrice:{
         type: Number,
         required: true
     },
-    orderStatus:{
+    status:{
         type: String,
         enum: ['Pending', 'Paid', 'Shipped', 'Completed', 'Cancelled'],
         default: 'Pending'
@@ -31,8 +31,8 @@ const orderSchema = new Schema<IOrder>({
         sp_code: String,
         sp_message: String,
         method: String,
-        date_time: String,  
-    }
+        date_time: String,
+      },
 }, {
     timestamps: true
 })
