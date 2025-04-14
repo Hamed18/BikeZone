@@ -43,7 +43,7 @@ const login = async (payload: { email: string; password: string }) => {
 
   // convert mongoose document to plain object and remove password
   const userWithoutPassword = user.toObject();
-  delete userWithoutPassword.password;
+  userWithoutPassword.password = "";
 
   return {
     token,

@@ -14,6 +14,8 @@ import Contact from "@/pages/home/Contact/Contact";
 import Home from "@/pages/home/Home";
 import ProductDetails from "@/pages/home/Product/ProductDetails";
 import Login from "@/pages/Login";
+import OrderDetails from "@/pages/order/Order";
+import OrderVerification from "@/pages/order/VerifyOrder";
 import Register from "@/pages/Register";
 import UserDash from "@/pages/user/UserDash";
 import UserOrder from "@/pages/user/UserOrder";
@@ -92,6 +94,14 @@ export const routes = createBrowserRouter([
       {
         path: "orders",
         element: <UserOrder />,
+      },
+      {
+        path: "order",
+        element: <OrderDetails />,
+      },
+      {
+        path: "order/verify",
+        element: <OrderVerification/>,
       },
     ],
   },

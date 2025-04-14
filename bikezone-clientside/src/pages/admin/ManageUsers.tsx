@@ -14,6 +14,7 @@ import {
 import LoadAnimation from "@/components/menu/LoadAnimation";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { TUser } from "@/types/global.type";
 // import { useUpdateUserActiveStatusMutation } from "@/redux/features/user/userApi";
 
 const ManageUsers = () => {
@@ -73,7 +74,7 @@ const ManageUsers = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.data?.map((user, i: number) => (
+            {users?.data?.map((user: TUser, i: number) => (
               <TableRow key={user._id}>
                 <TableCell className="font-medium">{i + 1}</TableCell>
                 <TableCell>{user?.name}</TableCell>

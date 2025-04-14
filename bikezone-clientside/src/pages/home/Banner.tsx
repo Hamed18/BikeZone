@@ -1,11 +1,10 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { Swiper as SwiperType } from "swiper/types";
+import { Navigation, Autoplay, EffectFade } from "swiper/modules";
+import type { SwiperOptions } from "swiper/types";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-
-import { Navigation, Autoplay, EffectFade } from "swiper/modules";
 
 interface BannerProps {
   banners?: {
@@ -16,9 +15,8 @@ interface BannerProps {
 }
 
 const Banner: React.FC<BannerProps> = ({ banners = defaultBanners }) => {
-  const swiperParams: SwiperType = {
+  const swiperParams: SwiperOptions = {
     modules: [Navigation, Autoplay, EffectFade],
-
     autoplay: {
       delay: 5000,
       disableOnInteraction: false,
@@ -29,6 +27,10 @@ const Banner: React.FC<BannerProps> = ({ banners = defaultBanners }) => {
     },
     loop: true,
     speed: 1000,
+    navigation: true, // Add this if you want navigation arrows
+    pagination: { // Add this if you want pagination dots
+      clickable: true,
+    },
   };
 
   return (

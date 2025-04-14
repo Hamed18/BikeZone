@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import LoadAnimation from "@/components/menu/LoadAnimation";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { toast } from "sonner";
+import { TProduct } from "@/types";
 
 const AllProducts = () => {
   const {
@@ -35,7 +36,9 @@ const AllProducts = () => {
   // Calculate max price when data loads
   const products = productData?.data || [];
   const maxPrice =
-    products.length > 0 ? Math.max(...products.map((p) => p.price)) : 0;
+    products.length > 0
+      ? Math.max(...products.map((p: TProduct) => p.price))
+      : 0;
 
   // Initialize price range once when data loads
   if (priceRange[1] === 0 && maxPrice > 0) {
@@ -43,11 +46,15 @@ const AllProducts = () => {
   }
 
   // Get unique brands and categories for filters
-  const brands = [...new Set(products.map((product) => product.brand))];
-  const categories = [...new Set(products.map((product) => product.category))];
+  const brands = [
+    ...new Set(products.map((product: TProduct) => product.brand)),
+  ];
+  const categories = [
+    ...new Set(products.map((product: TProduct) => product.category)),
+  ];
 
   // Filter products based on search and filters
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products.filter((product: TProduct) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -200,11 +207,10 @@ const AllProducts = () => {
               <div className="space-y-2">
                 {brands.map((brand) => (
                   <DropdownMenuCheckboxItem
-                    key={brand}
-                    checked={selectedBrands.includes(brand)}
-                    onCheckedChange={() => toggleBrand(brand)}
+                    checked={selectedBrands.includes((brand as string))}
+                    onCheckedChange={() => toggleBrand((brand as string))}
                   >
-                    {brand}
+                    {(brand as string)}
                   </DropdownMenuCheckboxItem>
                 ))}
               </div>
@@ -215,11 +221,10 @@ const AllProducts = () => {
               <div className="space-y-2">
                 {categories.map((category) => (
                   <DropdownMenuCheckboxItem
-                    key={category}
-                    checked={selectedCategories.includes(category)}
-                    onCheckedChange={() => toggleCategory(category)}
+                    checked={selectedCategories.includes((category as string))}
+                    onCheckedChange={() => toggleCategory((category as string))}
                   >
-                    {category}
+                    {(category as string)}
                   </DropdownMenuCheckboxItem>
                 ))}
               </div>
@@ -245,7 +250,7 @@ const AllProducts = () => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((product: TProduct) => (
           <Card
             key={product._id}
             className="hover:shadow-lg transition-shadow h-full flex flex-col"
