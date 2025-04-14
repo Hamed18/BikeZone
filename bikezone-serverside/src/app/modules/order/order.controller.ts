@@ -40,20 +40,7 @@ const getOrder = catchAsync(async (req: Request, res: Response) => {
       data: result,
     })
 })
-  
-//   const updateOrder = catchAsync(async (req: Request, res: Response) => {
-    
-//     const orderId = req.params.orderId
-//     const body = req.body
-//     const ip= req.ip
-//     const result = await orderService.paymentOne(orderId, body, ip!)
-//     sendResponse(res, {
-//       statusCode: StatusCodes.CREATED,
-//       message: 'User updated successfully',
-//       data: result,
-//     })
-// })
-  
+
   const deleteOrder = catchAsync(async (req: Request, res: Response) => {
   
     const orderId = req.params.orderId
@@ -79,7 +66,6 @@ export const orderController ={
     createOrder,
     getOrder,
     getSingleOrder,
-    // updateOrder,
    verifyPayment,
     deleteOrder,
 }

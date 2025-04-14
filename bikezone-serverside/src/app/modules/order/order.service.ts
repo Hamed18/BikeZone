@@ -1,9 +1,7 @@
 import mongoose from "mongoose"
-// import { IOrder } from "./order.interface"
 import Product from "../product/product.model"
 import Order from "./order.model"
-import User from "../user/user.model"
-import httpStatus from "http-status";
+
 import { orderUtils } from "./order.utils";
 import { IUser } from "../user/user.interface"
 import AppError from "../../errors/AppError"
@@ -11,31 +9,35 @@ interface IPament {
   orderId: string,
   user: string,
 }
-// const createOrder = async (payload: IOrder): Promise<IOrder> => {
-//   const result = await Order.create(payload);
-//   return result;
-// };
 
-// 
+
 const createOrder = async (
   user: IUser,
   payload: { product: string; orderQuantity: number},
   client_ip: string
 ) => {
- console.log(payload);
-  const requiredProduct= await Product.findById(payload.product)
+const session = await mongoose.startSession()
+session.startTransaction()
+try{
+  const {product, orderQuantity} = payload
+  const requiredProduct= await Product.findById(product)
   if(!requiredProduct){
     throw new Error('Product not found')
   }
-  const totalPrice = requiredProduct.price * payload?.orderQuantity
+  const totalPrice = requiredProduct.price * orderQuantity
   
-console.log(totalPrice);
+
   let order = await Order.create({
     user,
     product: requiredProduct._id,
     totalPrice,
   });
+  const updateProduct = await Product.findByIdAndUpdate(product, {
+    $inc: { quantity: - orderQuantity}}, {new: true, session})
 
+if(!updateProduct){
+throw new Error('Failed to update product')
+}
   // payment integration
   const shurjopayPayload = {
     amount: totalPrice,
@@ -58,10 +60,19 @@ console.log(totalPrice);
         id: payment.sp_order_id,
         transactionStatus: payment.transactionStatus,
       },
-    });
+    },
+    { session }
+  );
   }
+  await session.commitTransaction()
+  await session.endSession()
 
   return payment.checkout_url;
+}catch (error) {
+  await session.abortTransaction()
+  await session.endSession()
+  throw error
+}
 };
 
 const getOrder = async () => {
@@ -73,59 +84,11 @@ const getOrder = async () => {
     return result
   }
   
-  const paymentOne = async (payload: IPament, client_ip: string) => {
-   let order = await getSingleOrder(payload?.orderId)
-   const userInfo = await User.findById(payload?.user);
-  // payment integration
-  const shurjopayPayload = {
-    amount: order?.totalPrice,
-    order_id: order?._id,
-    currency: "BDT",
-    customer_name: userInfo?.name,
-    // customer_address: userInfo?.address,
-    customer_email: userInfo?.email,
-    // customer_phone: user.phone,
-    // customer_city: user.city,
-    client_ip,
-  };
-
-  const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
-
-  if (payment?.transactionStatus) {
-    order = await order?.updateOne({
-      transaction: {
-        id: payment.sp_order_id,
-        transactionStatus: payment.transactionStatus,
-      },
-    });
-  }
-
-  return payment.checkout_url;
-    // const result = await Order.findByIdAndUpdate(id, data, {
-    //   new: true,
-    // })
-    // return result
-  }
   
   const deleteOrder = async (id: string) => {
     const result = await Order.findByIdAndDelete(id)
     return result
   }
-
-// Payment Integration
-/*
-const shurjopayPayload = {
-  amount: totalPrice,
-  order_id: order._id,
-  currency: "BDT",
-  customer_name: user.name,
-  customer_address: user.address,
-  customer_email: user.email,
-  customer_phone: user.phone,
-  customer_city: user.city,
- // client_ip,
-};   
-*/
 
 const verifyPayment = async (order_id: string) => {
   const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
@@ -161,7 +124,6 @@ export const orderService={
     createOrder,
     getOrder,
     getSingleOrder,
-    paymentOne,
     deleteOrder,
     verifyPayment
 }
