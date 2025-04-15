@@ -1,6 +1,5 @@
 import { baseApi } from "../../api/baseApi";
 
-
 const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createOrder: builder.mutation({
@@ -9,6 +8,7 @@ const orderApi = baseApi.injectEndpoints({
         method: "POST",
         body: orderData,
       }),
+      invalidatesTags: ["userOrders"],
     }),
     getOrders: builder.query({
       query: () => {
@@ -17,6 +17,15 @@ const orderApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+    }),
+    getUserOrders: builder.query({
+      query: () => {
+        return {
+          url: `/order/user/orders`,
+          method: "GET",
+        };
+      },
+      providesTags: ["userOrders"],
     }),
     verifyOrder: builder.query({
       query: (order_id) => ({
@@ -32,4 +41,5 @@ export const {
   useCreateOrderMutation,
   useGetOrdersQuery,
   useVerifyOrderQuery,
+  useGetUserOrdersQuery,
 } = orderApi;
