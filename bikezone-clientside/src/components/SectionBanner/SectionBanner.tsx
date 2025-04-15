@@ -2,7 +2,7 @@ import { GoDotFill } from "react-icons/go";
 interface SectionBannerProps {
   heading: string;
   subHeading: string;
-  bannerImage: string;
+  bannerImage?: string;
 }
 const SectionBanner = ({
   heading,
