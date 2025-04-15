@@ -117,6 +117,7 @@ const getOrder = async () => {
           _id: "$userDetails._id",
           fullName: "$userDetails.name",
           email: "$userDetails.email",
+          isActive: "$userDetails.isActive",
         },
         product: {
           _id: "$productDetails._id",
@@ -130,6 +131,14 @@ const getOrder = async () => {
 };
 const getSingleOrder = async (id: string) => {
   const result = await Order.findById(id);
+  return result;
+};
+const updateStatus = async (orderData: any) => {
+  const result = await Order.findOneAndUpdate(
+    { _id: orderData.orderId },
+    { $set: { status: orderData.status } },
+    { new: true }
+  );
   return result;
 };
 
@@ -229,4 +238,5 @@ export const orderService = {
   deleteOrder,
   verifyPayment,
   getUserOrder,
+  updateStatus,
 };

@@ -17,7 +17,9 @@ orderRouter.get(
 );
 orderRouter.get("/", orderController.getOrder);
 orderRouter.get("/:orderId", orderController.getSingleOrder);
-// orderRouter.put('/:orderId', orderController.updateOrder)
+
+orderRouter.patch('/update-status', orderController.updateStatus)
+
 orderRouter.delete("/:orderId", orderController.deleteOrder);
 orderRouter.get(
   "/user/orders",

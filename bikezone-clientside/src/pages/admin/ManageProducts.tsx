@@ -21,6 +21,7 @@ import { TProduct } from "@/types";
 import UpdateProduct from "./UpdateProduct";
 import { toast } from "sonner";
 import DeleteConfirmationDialog from "@/components/others/DeleteConfirmationDialog";
+import { Link } from "react-router-dom";
 
 const ManageProducts = () => {
   const {
@@ -141,12 +142,12 @@ const ManageProducts = () => {
                 <TableCell>
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      product.inStock
+                      product.inStock && product?.quantity > 0
                         ? "bg-green-100 text-green-800"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {product.inStock ? "In Stock" : "Out of Stock"}
+                    {product.inStock && product?.quantity > 0 ? "In Stock" : "Out of Stock"}
                   </span>
                 </TableCell>
                 <TableCell>
@@ -169,9 +170,11 @@ const ManageProducts = () => {
                       <Trash2 className="h-4 w-4 text-red-300" />
                     </Button>
 
-                    <Button title="Details" variant="outline" size="icon">
-                      <Info className="h-4 w-4 text-blue-300" />
-                    </Button>
+                    <Link to={`/product/${product?._id}`} >
+                      <Button title="Details" variant="outline" size="icon">
+                        <Info className="h-4 w-4 text-blue-300" />
+                      </Button>
+                    </Link>
                   </div>
                 </TableCell>
               </TableRow>
