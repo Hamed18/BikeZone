@@ -34,6 +34,7 @@ export default function OrderDetails() {
   const { isLoading, data } = useGetOrdersQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+  console.log('oder details',data)
   const orderData: Order[] = data?.data;
 
   return isLoading ? (

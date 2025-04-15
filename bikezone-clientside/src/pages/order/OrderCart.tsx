@@ -17,7 +17,7 @@ const OrderCart = (props: {id: string}) => {
           orderQuantity: 1
          })
         if(result?.data?.status){
-          toast.success("Order Successful!");
+          // toast.success("Order Successful!");
         }else{
           toast.error("Not Order Successful!");
         }

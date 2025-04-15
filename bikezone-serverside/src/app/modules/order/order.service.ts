@@ -1,93 +1,196 @@
-import mongoose from "mongoose"
-import Product from "../product/product.model"
-import Order from "./order.model"
-import User from "../user/user.model"
-import { orderUtils } from "./order.utils"
+import mongoose from "mongoose";
+import Product from "../product/product.model";
+import Order from "./order.model";
+import User from "../user/user.model";
 import { orderUtils } from "./order.utils";
-import { IUser } from "../user/user.interface"
-import AppError from "../../errors/AppError"
+import { IUser } from "../user/user.interface";
+import AppError from "../../errors/AppError";
 interface IPament {
-  orderId: string,
-  user: string,
+  orderId: string;
+  user: string;
 }
 
 const createOrder = async (
   user: IUser,
-  payload: { product: string; orderQuantity: number},
+  payload: { product: string; orderQuantity: number },
   client_ip: string
 ) => {
-const session = await mongoose.startSession()
-session.startTransaction()
-try{
-  const {product, orderQuantity} = payload
-  const requiredProduct= await Product.findById(product)
-  if(!requiredProduct){
-    throw new Error('Product not found')
-  }
-  const totalPrice = requiredProduct.price * orderQuantity
-  
-  let order = await Order.create({
-    user,
-    product: requiredProduct._id,
-    totalPrice,
-  });
-  const updateProduct = await Product.findByIdAndUpdate(product, {
-    $inc: { quantity: - orderQuantity}}, {new: true, session})
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const { product, orderQuantity } = payload;
+    const requiredProduct = await Product.findById(product);
+    if (!requiredProduct) {
+      throw new Error("Product not found");
+    }
+    const totalPrice = requiredProduct.price * orderQuantity;
 
-if(!updateProduct){
-throw new Error('Failed to update product')
-}
-  // payment integration
-  const shurjopayPayload = {
-    amount: totalPrice,
-    order_id: order._id,
-    currency: "BDT",
-    customer_name: user.name,
-    customer_address: 'N/A',
-    customer_email: user.email,
-    customer_phone: 'N/A',
-    customer_city: 'N/A',
-    client_ip,
-  };
-
-  const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
-  console.log(payment);
-
-  if (payment?.transactionStatus) {
-    order = await order.updateOne({
-      transaction: {
-        id: payment.sp_order_id,
-        transactionStatus: payment.transactionStatus,
+    let order = await Order.create({
+      user,
+      product: requiredProduct._id,
+      totalPrice,
+    });
+    const updateProduct = await Product.findByIdAndUpdate(
+      product,
+      {
+        $inc: { quantity: -orderQuantity },
       },
-    },
-    { session }
-  );
-  }
-  await session.commitTransaction()
-  await session.endSession()
+      { new: true, session }
+    );
 
-  return payment.checkout_url;
-}catch (error) {
-  await session.abortTransaction()
-  await session.endSession()
-  throw error
-}
+    if (!updateProduct) {
+      throw new Error("Failed to update product");
+    }
+    // payment integration
+    const shurjopayPayload = {
+      amount: totalPrice,
+      order_id: order._id,
+      currency: "BDT",
+      customer_name: user.name,
+      customer_address: "N/A",
+      customer_email: user.email,
+      customer_phone: "N/A",
+      customer_city: "N/A",
+      client_ip,
+    };
+
+    const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
+    console.log(payment);
+
+    if (payment?.transactionStatus) {
+      order = await order.updateOne(
+        {
+          transaction: {
+            id: payment.sp_order_id,
+            transactionStatus: payment.transactionStatus,
+          },
+        },
+        { session }
+      );
+    }
+    await session.commitTransaction();
+    await session.endSession();
+
+    return payment.checkout_url;
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
 };
 
 const getOrder = async () => {
-    const result = await Order.find()
-    return result
-  }
-  const getSingleOrder = async (id: string) => {
-    const result = await Order.findById(id)
-    return result
-  }
-  
-  
-  const deleteOrder = async (id: string) => {
-    const result = await Order.findByIdAndDelete(id)
-    return result
-  }
+  // const result = await Order.find();
+
+  const result = await Order.aggregate([
+    {
+      $lookup: {
+        from: "users", // The collection name in MongoDB (usually lowercase plural)
+        localField: "user",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: "$userDetails", // Convert the array from lookup to an object
+    },
+    {
+      $lookup: {
+        from: "products", // The collection name in MongoDB
+        localField: "product",
+        foreignField: "_id",
+        as: "productDetails",
+      },
+    },
+    {
+      $unwind: "$productDetails",
+    },
+    {
+      $project: {
+        transaction: 1,
+        totalPrice: 1,
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        __v: 1,
+        user: {
+          _id: "$userDetails._id",
+          fullName: "$userDetails.name",
+          email: "$userDetails.email",
+        },
+        product: {
+          _id: "$productDetails._id",
+          name: "$productDetails.name",
+          image: "$productDetails.image",
+        },
+      },
+    },
+  ]);
+  return result;
+};
+const getSingleOrder = async (id: string) => {
+  const result = await Order.findById(id);
+  return result;
+};
+
+const getUserOrder = async (user: IUser) => {
+  const result = await Order.aggregate([
+    {
+      $match: {
+        user: user?._id,
+      },
+    },
+    {
+      $lookup: {
+        from: "users", // The collection name in MongoDB (usually lowercase plural)
+        localField: "user",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: "$userDetails", // Convert the array from lookup to an object
+    },
+    {
+      $lookup: {
+        from: "products", // The collection name in MongoDB
+        localField: "product",
+        foreignField: "_id",
+        as: "productDetails",
+      },
+    },
+    {
+      $unwind: "$productDetails",
+    },
+    {
+      $project: {
+        transaction: 1,
+        totalPrice: 1,
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        __v: 1,
+        user: {
+          _id: "$userDetails._id",
+          fullName: "$userDetails.name",
+          email: "$userDetails.email",
+        },
+        product: {
+          _id: "$productDetails._id",
+          name: "$productDetails.name",
+          image: "$productDetails.image",
+        },
+      },
+    },
+  ]);
+
+  return result;
+};
+
+const deleteOrder = async (id: string) => {
+  const result = await Order.findByIdAndDelete(id);
+  return result;
+};
 
 const verifyPayment = async (order_id: string) => {
   const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
@@ -119,10 +222,11 @@ const verifyPayment = async (order_id: string) => {
   return verifiedPayment;
 };
 
-export const orderService={
-    createOrder,
-    getOrder,
-    getSingleOrder,
-    deleteOrder,
-    verifyPayment
-}
+export const orderService = {
+  createOrder,
+  getOrder,
+  getSingleOrder,
+  deleteOrder,
+  verifyPayment,
+  getUserOrder,
+};
