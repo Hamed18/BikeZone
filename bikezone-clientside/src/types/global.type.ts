@@ -22,7 +22,7 @@ export type TProduct = {
   brand: string;
   image: string;
   price: number;
-  category:  "Road" | "Mountain" | "Sport" | "Commuter";
+  category: "Road" | "Mountain" | "Sport" | "Commuter";
   description: string;
   quantity: number;
   inStock: boolean;

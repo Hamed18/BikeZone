@@ -12,7 +12,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
-    message: "Order created successfully",
+    message: "Order processed successfully",
     data: result,
   });
 });
@@ -45,19 +45,30 @@ const getSingleOrder = catchAsync(async (req: Request, res: Response) => {
   const result = await orderService.getSingleOrder(orderId);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    message: "User got successfully",
+    message: "Order got successfully",
     data: result,
   });
 });
 
 const deleteOrder = catchAsync(async (req: Request, res: Response) => {
-  const orderId = req.params.orderId;
+  const {orderId} = req.params;
   await orderService.deleteOrder(orderId);
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
-    message: "User deleted successfully",
+    message: "Order deleted successfully",
     data: {},
+  });
+});
+
+const updateStatus = catchAsync(async (req: Request, res: Response) => {
+  const orderData = req.body;
+  const result = await orderService.updateStatus(orderData);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.CREATED,
+    message: "Order status change successfully",
+    data: result,
   });
 });
 
@@ -79,4 +90,5 @@ export const orderController = {
   verifyPayment,
   deleteOrder,
   getUserOrder,
+  updateStatus,
 };

@@ -137,11 +137,7 @@ const AllProducts = () => {
             inStockOnly ||
             priceRange[0] !== 0 ||
             priceRange[1] !== maxPrice) && (
-            <Button
-              variant="ghost"
-              onClick={resetFilters}
-              className="text-primary"
-            >
+            <Button onClick={resetFilters}>
               <X className="h-4 w-4 mr-1" />
               Reset Filters
             </Button>
@@ -253,56 +249,61 @@ const AllProducts = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product: TProduct) => (
-            <Card
-              key={product._id}
-              className="hover:shadow-lg transition-shadow h-full flex flex-col"
-            >
-              <CardHeader className="p-0">
-                <img
-                  src={product.image || "https://via.placeholder.com/300x200"}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-t-lg"
-                />
-              </CardHeader>
-              <CardContent className="p-4 flex-grow">
-                <CardTitle className="text-lg">{product.name}</CardTitle>
-                <div className="mt-2 space-y-1">
-                  <p className="text-sm">
-                    <span className="font-medium">Brand:</span> {product.brand}
+          {filteredProducts.map((product: TProduct) => {
+            return (
+              <Card
+                key={product._id}
+                className="hover:shadow-lg transition-shadow h-full flex flex-col"
+              >
+                <CardHeader className="p-0">
+                  <img
+                    src={product.image || "https://via.placeholder.com/300x200"}
+                    alt={product.name}
+                    className="w-full h-48 object-cover rounded-t-lg"
+                  />
+                </CardHeader>
+                <CardContent className="p-4 flex-grow">
+                  <CardTitle className="text-lg">{product.name}</CardTitle>
+                  <div className="mt-2 space-y-1">
+                    <p className="text-sm">
+                      <span className="font-medium">Brand:</span>{" "}
+                      {product.brand}
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-medium">Category:</span>{" "}
+                      {product.category}
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-medium">Price:</span> $
+                      {product.price.toFixed(2)}
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-medium">Status:</span>
+                      <span
+                        className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
+                          product.inStock && product?.quantity > 0
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {product.inStock && product?.quantity > 0
+                          ? "In Stock"
+                          : "Out of Stock"}
+                      </span>
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                    {product.description}
                   </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Category:</span>{" "}
-                    {product.category}
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Price:</span> $
-                    {product.price.toFixed(2)}
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Status:</span>
-                    <span
-                      className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
-                        product.inStock
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {product.inStock ? "In Stock" : "Out of Stock"}
-                    </span>
-                  </p>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                  {product.description}
-                </p>
-              </CardContent>
-              <CardFooter className="p-4 pt-0">
-                <Link to={`/product/${product._id}`} className="w-full">
-                  <Button className="w-full">View Details</Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
+                </CardContent>
+                <CardFooter className="p-4 pt-0">
+                  <Link to={`/product/${product._id}`} className="w-full">
+                    <Button className="w-full">View Details</Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
 
         {filteredProducts.length === 0 && (

@@ -30,11 +30,20 @@ const ProductCard = () => {
 
             <div className="p-5">
               <p className="text-gray-400 text-base mt-5 ">
-                In Stock :
-                <span className=" text-black font-bold">
-                  {" "}
-                  {product.quantity}
-                </span>
+                <p>
+                  <span
+                    className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
+                      product.inStock && product?.quantity > 0
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {product.inStock && product?.quantity > 0
+                      ? "In Stock: "
+                      : "Out of Stock: "}
+                    {product?.quantity}
+                  </span>
+                </p>
               </p>
               <Link to={`/product/${product._id}`}>
                 <p className="text-2xl font-medium mt-3 hover:underline">

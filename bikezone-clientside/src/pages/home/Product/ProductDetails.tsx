@@ -1,28 +1,57 @@
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "@/redux/hooks";
-import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import OrderCart from "@/pages/order/OrderCart";
 import SectionBanner from "@/components/SectionBanner/SectionBanner";
+import LoadAnimation from "@/components/menu/LoadAnimation";
+import { ApiError } from "@/types/global.type";
+import { Button } from "@/components/ui/button";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppSelector } from "@/redux/hooks";
+import { useGeSingletUserQuery } from "@/redux/features/user/userApi";
 
 const ProductDetails = () => {
-  const user = useAppSelector(selectCurrentUser);
-  console.log(user);
-  const { productId } = useParams();
-  const { data, error, isLoading } = useGetAllProductsQuery(undefined);
+  const currentData = useAppSelector(selectCurrentUser);
+  const { data: userData, isLoading: userLoading } = useGeSingletUserQuery(
+    currentData?._id
+  );
 
-  console.log("Product ID from URL:", productId);
-  console.log("Product data:", data);
+  const { productId } = useParams();
+  const { data, error, isLoading, isError } = useGetAllProductsQuery(undefined);
 
   const products: TProduct[] = data?.data || [];
   const product = products.find(
     (prod: TProduct) => String(prod._id) === productId
   );
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading product details</div>;
-  if (!product) return <div>Product not found</div>;
+  if (isLoading || userLoading) {
+    return <LoadAnimation />;
+  }
+
+  if (isError) {
+    return (
+      <div className="p-4 md:p-6">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <strong className="font-bold">Error!</strong>
+          <span className="block sm:inline">
+            {" "}
+            {(error as ApiError)?.data?.message || "Failed to load product"}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="p-4 md:p-6">
+        <div className="flex flex-col items-center justify-center gap-4 h-[calc(100vh-200px)]">
+          <h3 className="text-xl font-semibold">No product found</h3>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <SectionBanner heading="Product Details" subHeading="Product Details" />
@@ -46,7 +75,15 @@ const ProductDetails = () => {
               <p className="">Brand : {product.brand}</p>
               <p className="mt-4">{product.description}</p>
             </div>
-            <OrderCart id={`${productId}`} />
+            {userData?.data?.isActive == false ? (
+              <Button style={{ backgroundColor: "red" }}>
+                You are blocked
+              </Button>
+            ) : product.inStock && product?.quantity > 0 ? (
+              <OrderCart id={`${productId}`} />
+            ) : (
+              <Button>Out of stock</Button>
+            )}
           </div>
         </div>
       </div>
