@@ -10,6 +10,7 @@ import ManageUsers from "@/pages/admin/ManageUsers";
 // import AllProducts2 from "@/pages/AllProduct2";
 import AllProducts from "@/pages/AllProducts";
 import Checkout from "@/pages/Checkout";
+import ErrorPage from "@/pages/ErrorPage/ErrorPage";
 import Contact from "@/pages/home/Contact/Contact";
 import Home from "@/pages/home/Home";
 import ProductDetails from "@/pages/home/Product/ProductDetails";
@@ -26,6 +27,7 @@ export const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -101,7 +103,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "order/verify",
-        element: <OrderVerification/>,
+        element: <OrderVerification />,
       },
     ],
   },
