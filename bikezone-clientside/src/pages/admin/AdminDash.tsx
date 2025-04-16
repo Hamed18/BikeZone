@@ -80,11 +80,11 @@ const AdminDash = () => {
               <span className="font-medium">{orderStatusCounts.cancelled}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Cancelled</span>
+              <span className="text-gray-600">Pending</span>
               <span className="font-medium">{orderStatusCounts.pending}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Cancelled</span>
+              <span className="text-gray-600">Shipped</span>
               <span className="font-medium">{orderStatusCounts.shipped}</span>
             </div>
           </div>
