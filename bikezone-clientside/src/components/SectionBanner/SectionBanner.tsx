@@ -17,7 +17,7 @@ const SectionBanner = ({
         <img
           alt="banner"
           src={bannerImage || defaultImage}
-          className="w-full  md:h-[60vh] object-cover"
+          className="w-full md:h-[60vh] object-cover"
         />
         <div className="absolute inset-0 bg-black/50 z-10" />
         <div className="text-white absolute top-16 md:top-40 flex items-center pl-5 md:pl-32 max-w-[1440px] mx-auto z-20">

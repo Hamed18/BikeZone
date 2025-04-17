@@ -15,7 +15,7 @@ const ProductCard = () => {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {data?.data?.slice(0, 3).map((product: TProduct) => (
-          <div className=" max-w-md w-full shadow-md" key={product?._id}>
+          <div className=" max-w-md w-full shadow-xl" key={product?._id}>
             <div className="relative">
               <img
                 alt="Banner Profile"
@@ -57,18 +57,20 @@ const ProductCard = () => {
                 </li>
                 <p className=" text-base">Category : {product.category}</p>
               </div>
-              <Link to={`/product/${product?._id}`}>
-                <Button
-                  style={{
-                    backgroundColor: "#0000",
-                    color: "black",
-                    border: "2px solid black",
-                  }}
-                >
-                  <Info />
-                  View Details
-                </Button>
-              </Link>
+              <div className="flex justify-center">
+                <Link to={`/product/${product?._id}`}>
+                  <Button
+                    style={{
+                      backgroundColor: "#0000",
+                      color: "black",
+                      border: "2px solid black",
+                    }}
+                  >
+                    <Info />
+                    View Details
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         ))}

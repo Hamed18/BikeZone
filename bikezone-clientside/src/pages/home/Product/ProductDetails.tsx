@@ -55,11 +55,11 @@ const ProductDetails = () => {
   return (
     <div>
       <SectionBanner heading="Product Details" subHeading="Product Details" />
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-10 items-start my-10">
+      <div className="max-w-7xl mx-auto px-2">
+        <div className="grid md:grid-cols-2 md:gap-10 gap-5 items-start my-10">
           <div>
             <img
-              className="w-full h-[60vh] object-cover"
+              className="w-full md:h-[60vh] object-contain rounded-2xl"
               src={product.image}
               alt={product.name}
             />
