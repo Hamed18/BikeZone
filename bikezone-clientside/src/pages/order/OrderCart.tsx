@@ -52,7 +52,7 @@ const OrderCart = ({ cart }: { cart: TCartItem }) => {
   return (
     <div>
       <Button className="w-full mt-6" size="lg" onClick={handleAddToOrder}>
-        Place Order
+        Order Now
       </Button>
     </div>
   );
