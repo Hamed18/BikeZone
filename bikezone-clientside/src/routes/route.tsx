@@ -47,6 +47,10 @@ export const routes = createBrowserRouter([
         path: "/product/:productId",
         element: <ProductDetails />,
       },
+      {
+        path: "/checkout/:productId",
+        element: <Checkout />,
+      },
     ],
   },
   {
@@ -101,14 +105,11 @@ export const routes = createBrowserRouter([
       },
       {
         path: "order/verify",
-        element: <OrderVerification/>,
+        element: <OrderVerification />,
       },
     ],
   },
-  {
-    path: "/checkout/:id",
-    element: <Checkout />,
-  },
+
   {
     path: "/login",
     element: <Login />,

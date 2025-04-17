@@ -23,3 +23,11 @@ export type TProductFormData = Omit<
   TProduct,
   "_id" | "createdAt" | "updatedAt" | "__v"
 >;
+
+export type TCartItem = {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+};

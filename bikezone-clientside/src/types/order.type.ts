@@ -2,7 +2,7 @@ interface User {
   _id: string;
   fullName: string;
   email: string;
-  isActive:boolean
+  isActive: boolean;
 }
 
 interface Product {
@@ -18,6 +18,7 @@ interface Transaction {
 
 export type TOrder = {
   _id: string;
+  orderQuantity?: number;
   user: User;
   product: Product;
   totalPrice: number;
