@@ -1,7 +1,7 @@
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { TProduct } from "@/types";
-import { useParams } from "react-router-dom";
-import OrderCart from "@/pages/order/OrderCart";
+import { Link, useParams } from "react-router-dom";
+// import OrderCart from "@/pages/order/OrderCart";
 import SectionBanner from "@/components/SectionBanner/SectionBanner";
 import LoadAnimation from "@/components/menu/LoadAnimation";
 import { ApiError } from "@/types/global.type";
@@ -80,7 +80,15 @@ const ProductDetails = () => {
                 You are blocked
               </Button>
             ) : product.inStock && product?.quantity > 0 ? (
-              <OrderCart id={`${productId}`} />
+              currentData?.role == "admin" ? (
+                <Button style={{ backgroundColor: "red" }}>
+                  Admin Can't Buy
+                </Button>
+              ) : (
+                <Link to={`/checkout/${product._id}`}>
+                  <Button>Check Out</Button>
+                </Link>
+              )
             ) : (
               <Button>Out of stock</Button>
             )}

@@ -4,7 +4,7 @@ import { IUser } from "../user/user.interface"; //
 export interface IOrder {
     user : mongoose.Schema.Types.ObjectId
     product : mongoose.Schema.Types.ObjectId
-    // orderQuantity : number
+    orderQuantity : number
     // orderStatus: 'Pending' | 'Paid' | 'Cancelled'
     status: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled";
     totalPrice? : number

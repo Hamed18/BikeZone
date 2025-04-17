@@ -68,6 +68,7 @@ const UserOrder = () => {
             <TableRow>
               <TableHead>#</TableHead>
               <TableHead>Product</TableHead>
+              <TableHead className="text-center">Quantity</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Total Price</TableHead>
               <TableHead>Order Date</TableHead>
@@ -93,6 +94,7 @@ const UserOrder = () => {
                       </Link>
                     </div>
                   </TableCell>
+                  <TableCell className="text-center">{order?.orderQuantity || 1}</TableCell>
                   <TableCell>
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${

@@ -146,6 +146,7 @@ const ManageOrders = () => {
                     >
                       {order.product.name}
                     </Link>
+                    <p>x{order?.orderQuantity || 1}</p>
                   </div>
                 </TableCell>
                 <TableCell className="text-sm">

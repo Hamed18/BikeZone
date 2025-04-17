@@ -1,44 +1,45 @@
 import { model, Schema } from "mongoose";
 import { IOrder } from "./order.interface";
 
-
-const orderSchema = new Schema<IOrder>({
+const orderSchema = new Schema<IOrder>(
+  {
     user: {
-        type: Schema.Types.ObjectId,
-        required: true
+      type: Schema.Types.ObjectId,
+      required: true,
     },
     product: {
-        type: Schema.Types.ObjectId,
-        required: true
+      type: Schema.Types.ObjectId,
+      required: true,
     },
-    // orderQuantity:{
-    //     type: Number,
-    //     required: true
-    // },
-    totalPrice:{
-        type: Number,
-        required: true
+    orderQuantity: {
+      type: Number,
+      required: true,
+      default: 1,
     },
-    status:{
-        type: String,
-        enum: ['Pending', 'Paid', 'Shipped', 'Delivered', 'Cancelled'],
-        default: 'Pending'
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["Pending", "Paid", "Shipped", "Delivered", "Cancelled"],
+      default: "Pending",
     },
     transaction: {
-        id: String,
-        transactionStatus: String,
-        bank_status: String,
-        sp_code: String,
-        sp_message: String,
-        method: String,
-        date_time: String,
-      },
-}, {
-    timestamps: true
-})
+      id: String,
+      transactionStatus: String,
+      bank_status: String,
+      sp_code: String,
+      sp_message: String,
+      method: String,
+      date_time: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const Order = model<IOrder>('order', orderSchema)
+const Order = model<IOrder>("order", orderSchema);
 
-export default Order
-
-
+export default Order;

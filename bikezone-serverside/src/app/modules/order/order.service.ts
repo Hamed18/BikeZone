@@ -4,7 +4,6 @@ import Order from "./order.model";
 import User from "../user/user.model";
 import { orderUtils } from "./order.utils";
 import { IUser } from "../user/user.interface";
-import AppError from "../../errors/AppError";
 interface IPament {
   orderId: string;
   user: string;
@@ -28,6 +27,7 @@ const createOrder = async (
     let order = await Order.create({
       user,
       product: requiredProduct._id,
+      orderQuantity,
       totalPrice,
     });
     const updateProduct = await Product.findByIdAndUpdate(
@@ -111,7 +111,7 @@ const getOrder = async () => {
         totalPrice: 1,
         status: 1,
         createdAt: 1,
-        updatedAt: 1,
+        orderQuantity: 1,
         __v: 1,
         user: {
           _id: "$userDetails._id",
@@ -122,6 +122,7 @@ const getOrder = async () => {
         product: {
           _id: "$productDetails._id",
           name: "$productDetails.name",
+          quantity: "$productDetails.quantity",
           image: "$productDetails.image",
         },
       },
@@ -177,7 +178,7 @@ const getUserOrder = async (user: IUser) => {
         totalPrice: 1,
         status: 1,
         createdAt: 1,
-        updatedAt: 1,
+        orderQuantity: 1,
         __v: 1,
         user: {
           _id: "$userDetails._id",
