@@ -51,7 +51,11 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/checkout/:productId",
-        element: <Checkout />,
+        element: (
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
