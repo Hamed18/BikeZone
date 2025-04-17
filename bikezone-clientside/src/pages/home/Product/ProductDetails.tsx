@@ -86,7 +86,7 @@ const ProductDetails = () => {
                 </Button>
               ) : (
                 <Link to={`/checkout/${product._id}`}>
-                  <Button>Check Out</Button>
+                  <Button>Buy Now</Button>
                 </Link>
               )
             ) : (
