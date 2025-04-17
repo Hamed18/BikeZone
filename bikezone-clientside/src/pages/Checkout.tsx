@@ -6,8 +6,16 @@ import OrderCart from "./order/OrderCart";
 import { TCartItem } from "@/types";
 import LoadAnimation from "@/components/menu/LoadAnimation";
 import { toast } from "sonner";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useGeSingletUserQuery } from "@/redux/features/user/userApi";
 
 const Checkout = () => {
+  const user = useAppSelector(selectCurrentUser);
+  const { data: userData, isLoading: userLoading } = useGeSingletUserQuery(
+    user?._id
+  );
+
   const { productId } = useParams<{ productId: string }>();
   const { data: product, isLoading } = useGetSingleProductQuery(
     productId || ""
@@ -59,7 +67,7 @@ const Checkout = () => {
   const tax = subtotal * taxRate;
   const total = subtotal + tax;
 
-  if (isLoading) {
+  if (isLoading || userLoading) {
     return <LoadAnimation />;
   }
 
@@ -68,12 +76,12 @@ const Checkout = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Checkout</h1>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <p className="sm:text-4xl text-2xl font-bold mb-6">Checkout</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-2">
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Your Order</h2>
 
@@ -85,38 +93,45 @@ const Checkout = () => {
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-20 h-20 object-cover rounded mr-4"
+                  className="sm:w-20 sm:h-20 w-10 h-10 object-cover rounded mr-4 "
                 />
                 <div className="flex-1">
                   <h3 className="font-medium">{item.name}</h3>
                   <p className="text-gray-600">${item.price.toFixed(2)}</p>
                 </div>
-                <div className="flex items-center">
-                  <Button
-                    style={{ backgroundColor: "red" }}
-                    size="sm"
-                    onClick={() =>
-                      handleQuantityChange(item.productId, item.quantity - 1)
-                    }
-                  >
-                    -
-                  </Button>
-                  <span className="mx-4">{item.quantity}</span>
-                  <Button
-                    style={{ backgroundColor: "green" }}
-                    size="sm"
-                    onClick={() =>
-                      handleQuantityChange(item.productId, item.quantity + 1)
-                    }
-                  >
-                    +
-                  </Button>
-                </div>
-                <div className="ml-8 font-medium">
-                  ${(item.price * item.quantity).toFixed(2)}
+                <div className="flex md:flex-row flex-col gap-2">
+                  <div className="flex items-center">
+                    <Button
+                      style={{ backgroundColor: "red" }}
+                      size="sm"
+                      onClick={() =>
+                        handleQuantityChange(item.productId, item.quantity - 1)
+                      }
+                    >
+                      -
+                    </Button>
+                    <span className="mx-4">{item.quantity}</span>
+                    <Button
+                      style={{ backgroundColor: "green" }}
+                      size="sm"
+                      onClick={() =>
+                        handleQuantityChange(item.productId, item.quantity + 1)
+                      }
+                    >
+                      +
+                    </Button>
+                  </div>
+                  <div className="ml-8 font-medium">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">User Information</h2>
+            <div>Name: {userData?.data?.name}</div>
+            <div>Email: {userData?.data?.email}</div>
           </div>
         </div>
 

@@ -11,6 +11,7 @@ type SocialMediaLink = {
 };
 
 import logo from "@/assets/logo-white.svg";
+import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 
 const Footer = () => {
   const socialLinks: SocialMediaLink[] = [
@@ -29,7 +30,7 @@ const Footer = () => {
   return (
     <div className="bg-black text-white">
       <div className="max-w-7xl md:py-14 py-8 mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {/* Logo Section */}
           <div className="space-y-3">
             {/* Logo */}
@@ -47,10 +48,26 @@ const Footer = () => {
               </h2>
             </div>
           </div>
+          <div className="flex flex-col sm:items-center">
+            <div>
+              <p className="text-white font-bold sm:block">CONTACT</p>
+              <ul className="my-2 space-y-1">
+                <li className="flex items-center gap-1">
+                  <MdEmail /> info@bikeshop.com{" "}
+                </li>
+                <li className="flex items-center gap-1">
+                  <MdPhone /> +61 400 000 000{" "}
+                </li>
+                <li className="flex items-center gap-1">
+                  <MdLocationOn /> Dhaka,Bangladesh{" "}
+                </li>
+              </ul>
+            </div>
+          </div>
           {/* Social Media Section */}
           <div className="flex sm:flex-row flex-col sm:justify-end sm:gap-4 gap-2">
             <p className="text-white font-bold sm:block">SOCIAL MEDIA</p>
-            <div className="flex" >
+            <div className="flex">
               {socialLinks.map((link, index) => (
                 <Link key={index} to={link.to} className="hover:text-primary">
                   {link.icon}
