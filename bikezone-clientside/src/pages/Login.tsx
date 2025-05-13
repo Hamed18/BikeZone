@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import logo from "@/assets/logo.png"; // Make sure to import your logo
+import logo from "@/assets/logo.png";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +31,6 @@ const formSchema = z.object({
 
 const Login = () => {
   const dispatch = useAppDispatch();
-
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginMutation();
 
@@ -45,7 +44,7 @@ const Login = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const toastId = toast.loading("User Login....");
-  
+
     try {
       const res = await loginUser(data).unwrap();
       dispatch(setUser({ user: res.data, token: res.token }));
@@ -56,20 +55,14 @@ const Login = () => {
       } else {
         navigate("/");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Login error:", error);
-      
-      // Handle different error structures
       let errorMessage = "Login failed. Please try again.";
-  
-      // Check for Zod validation errors
-      if (error?.data?.error?.name === 'ZodError') {
+
+      if (error?.data?.error?.name === "ZodError") {
         const firstError = error.data.error.issues[0];
         errorMessage = firstError.message || "Validation error";
-      } 
-      // Check for the specific stringified JSON case
-      else if (error?.data?.message) {
+      } else if (error?.data?.message) {
         try {
           const parsedMessages = JSON.parse(error.data.message);
           if (Array.isArray(parsedMessages) && parsedMessages[0]?.message) {
@@ -80,19 +73,16 @@ const Login = () => {
         } catch {
           errorMessage = error.data.message;
         }
-      }
-      // Check for issues array format
-      else if (error?.data?.issues?.length > 0) {
+      } else if (error?.data?.issues?.length > 0) {
         errorMessage = error.data.issues[0].message;
       }
-  
+
       toast.error(errorMessage, { id: toastId });
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Login Form */}
       <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-sm border">
           <div className="">
@@ -109,6 +99,7 @@ const Login = () => {
                 </span>
               </h2>
             </div>
+
             <h1 className="text-lg font-bold text-center my-8">Login</h1>
           </div>
           <Form {...form}>
@@ -172,6 +163,21 @@ const Login = () => {
               </Link>
             </p>
           </div>
+
+                      {/* ✅ Test Credentials */}
+            <div className="mt-4 text-sm text-gray-600 text-center">
+              <p className="font-semibold">Test Credentials:</p>
+              <ul className="mt-1 space-y-1">
+                <li>
+                  <span className="font-medium">User:</span>{" "}
+                  Email: skyblue@gmail.com  <span className="ml-2">Password: 123456</span> 
+                </li>
+                <li>
+                  <span className="font-medium">Admin:</span>{" "}
+                  Email: admin@gmail.com <span className="ml-2">Password: admin123</span>
+                </li>
+              </ul>
+            </div>
         </div>
       </main>
     </div>
