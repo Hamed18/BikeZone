@@ -15,7 +15,8 @@ import LoadAnimation from "@/components/menu/LoadAnimation";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { TUser } from "@/types/global.type";
-// import { useUpdateUserActiveStatusMutation } from "@/redux/features/user/userApi";
+import HeaderPath from "./header/HeaderPath";
+import { Card } from "@/components/ui/card";
 
 const ManageUsers = () => {
   const {
@@ -57,12 +58,13 @@ const ManageUsers = () => {
     );
   }
   return (
-    <div className="p-4 md:p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <>
+      <HeaderPath role="Admin" subPath="Manage Users" />
+      <div className="px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-2xl font-bold">Manage Users</h3>
       </div>
 
-      <div className="rounded-md border">
+      <Card className="rounded-md border m-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -101,8 +103,8 @@ const ManageUsers = () => {
             ))}
           </TableBody>
         </Table>
-      </div>
-    </div>
+      </Card>
+    </>
   );
 };
 

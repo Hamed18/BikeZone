@@ -29,7 +29,7 @@ const Scroll = () => {
     <div>
       <Button
         onClick={scrollToTop}
-        className={`fixed bottom-10 right-10 h-14 w-14 rounded-full  text-white shadow-xl hover:bg-blue-700 transition-all duration-300 flex items-center justify-center text-3xl ${
+        className={`fixed bottom-10 right-10 rounded-md transition-all duration-300  text-3xl ${
           isVisible ? "block" : "hidden"
         }`}
       >

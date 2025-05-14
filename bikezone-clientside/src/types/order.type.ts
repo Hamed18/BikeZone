@@ -8,7 +8,8 @@ interface User {
 interface Product {
   _id: string;
   name: string;
-  image: string;
+  // images: string;
+  images: string[];
 }
 
 interface Transaction {

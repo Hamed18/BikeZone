@@ -26,6 +26,8 @@ import { Table as TableIcon, Trash2 } from "lucide-react";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import HeaderPath from "./header/HeaderPath";
+import { Card } from "@/components/ui/card";
 
 const statusOptions = [
   "Pending",
@@ -107,15 +109,16 @@ const ManageOrders = () => {
   }
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <>
+      <HeaderPath role="Admin" subPath="Manage Orders" />
+      <div className="px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-2xl font-bold">Manage Orders</h3>
         <div className="text-sm text-gray-500">
           Total Orders: {allOrders?.data?.length}
         </div>
       </div>
 
-      <div className="rounded-md border overflow-x-auto">
+      <Card className="rounded-md border overflow-x-auto m-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -134,12 +137,6 @@ const ManageOrders = () => {
                 <TableCell className="font-medium">{i + 1}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3 min-w-[200px]">
-                    <img
-                      src={order.product.image}
-                      alt={order.product.name}
-                      className="w-10 h-10 object-cover rounded"
-                      loading="lazy"
-                    />
                     <Link
                       to={`/product/${order.product._id}`}
                       className="hover:underline line-clamp-1"
@@ -243,8 +240,8 @@ const ManageOrders = () => {
             ))}
           </TableBody>
         </Table>
-      </div>
-    </div>
+      </Card>
+    </>
   );
 };
 

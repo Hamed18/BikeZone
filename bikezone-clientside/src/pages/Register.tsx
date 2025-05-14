@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import logo from "@/assets/logo.png";
+import { Typewriter } from "react-simple-typewriter";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -52,38 +52,38 @@ const Register = () => {
     };
     // Add other possible success response fields here
   }
-  
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const toastId = toast.loading("User creating....");
-  
+
     try {
-      const res = await register(data) as ApiResponse;
-  
+      const res = (await register(data)) as ApiResponse;
+
       if (res?.error?.data?.success === false) {
         // Show error message from response or fallback
-        toast.error(res?.error?.data?.message || "User registration failed!", { 
-          id: toastId 
+        toast.error(res?.error?.data?.message || "User registration failed!", {
+          id: toastId,
         });
         console.log("Registration error:", res.error.data);
         return;
       }
-  
+
       form.reset();
       navigate("/login");
       toast.success("User Registered!", { id: toastId });
     } catch (error: unknown) {
       console.error("Registration error:", error);
-      
+
       // Handle different error types
       let errorMessage = "User registration failed!";
-      
-      if (typeof error === 'object' && error !== null) {
+
+      if (typeof error === "object" && error !== null) {
         const apiError = error as { data?: { message?: string } };
         if (apiError?.data?.message) {
           errorMessage = apiError.data.message;
         }
       }
-  
+
       toast.error(errorMessage, { id: toastId });
     }
   };
@@ -94,21 +94,23 @@ const Register = () => {
       <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-sm border">
           <div className="">
-            <div className="flex items-center justify-center gap-2 border border-black bg-gray-200 p-2 rounded-xl">
-              <img
-                src={logo}
-                alt="logo"
-                className="w-10 h-10 md:w-16 md:h-16"
-              />
-              <h2 className="flex flex-col justify-center uppercase">
-                <span className="font-bold text-xl md:text-3xl">Bike Zone</span>
-                <span className="-mt-1 font-normal text-xs md:text-sm tracking-widest">
-                  Upgrade your ride
-                </span>
-              </h2>
-            </div>
-            <div className=" text-2xl font-bold text-center my-8">
-              Create Account
+            <div className="flex items-center justify-center p-2 rounded-xl">
+              <div className="text-3xl font-semibold flex justify-center items-center gap-2 pb-5">
+                Sign in{" "}
+                <h1 className="font-bold text-3xl tracking-widest">
+                  <span className="text-[#E81938]">Bike</span>
+                  <span className="inline-block w-1" />
+                  <Typewriter
+                    words={["Zone"]}
+                    loop={0}
+                    cursor
+                    cursorStyle="_"
+                    typeSpeed={100}
+                    deleteSpeed={50}
+                    delaySpeed={1000}
+                  />
+                </h1>
+              </div>
             </div>
           </div>
 
@@ -160,11 +162,7 @@ const Register = () => {
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <Loader className="animate-spin" /> Creating...
@@ -181,7 +179,7 @@ const Register = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-medium text-blue-600 hover:underline"
+                className="font-medium text-primary hover:underline"
               >
                 Login
               </Link>

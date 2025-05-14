@@ -37,6 +37,7 @@ const DashboardLayout = () => {
     { name: "Users", icon: Users, href: "/admin/manage-users" },
     { name: "Products", icon: ShoppingCart, href: "/admin/manage-products" },
     { name: "Manage Orders", icon: Package, href: "/admin/manage-orders" },
+    { name: "Profile", icon: User, href: "/admin/profile" },
   ];
 
   const userItems = [
@@ -49,7 +50,7 @@ const DashboardLayout = () => {
   const panelTitle = role === "admin" ? "Admin Panel" : "My Account";
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen">
       {/* Desktop Sidebar */}
       <aside
         className={cn(
@@ -192,7 +193,7 @@ const DashboardLayout = () => {
           <h4 className="ml-2 text-lg font-semibold">{panelTitle}</h4>
         </header>
 
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-auto">
           <Outlet />
         </main>
       </div>

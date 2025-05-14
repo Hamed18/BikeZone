@@ -2,12 +2,15 @@ export type TProduct = {
   _id: string;
   name: string;
   brand: string;
-  image: string;
+  // image: string;
+  images: string[];
   price: number;
   category: string;
   description: string;
   quantity: number;
   inStock: boolean;
+  rating?: number;
+  totalReviews?: number;
   createdAt: string | Date;
   updatedAt: string | Date;
   __v?: number;
@@ -29,5 +32,5 @@ export type TCartItem = {
   name: string;
   price: number;
   quantity: number;
-  image: string;
+  images: string[];
 };

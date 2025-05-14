@@ -38,11 +38,13 @@ const AddProduct = ({
     defaultValues: {
       name: "",
       brand: "",
-      image: "",
+      imagesString: "",
       price: 0,
       category: undefined,
       description: "",
       quantity: 0,
+      rating: 0,
+      totalReviews: 0,
       inStock: true,
     },
   });
@@ -50,17 +52,28 @@ const AddProduct = ({
   const inStockValue = watch("inStock");
 
   const onSubmit = async (data: TProductFormData) => {
-    const toastId = toast.loading("Uploading....");
+    const toastId = toast.loading("Uploading...");
+
+    // Convert comma-separated image URLs to array
+    const images = data.imagesString
+      ? data.imagesString.split(",").map((url) => url.trim())
+      : [];
+
+    const productData = {
+      ...data,
+      images,
+    };
+    delete productData.imagesString;
 
     try {
-      const result = await addProduct(data).unwrap();
+      const result = await addProduct(productData).unwrap();
       console.log("Product added successfully:", result);
       toast.success("Product Created!", { id: toastId });
       setIsDialogOpen(false);
       reset();
       refetch();
     } catch (error) {
-      toast.error("Not Create!", { id: toastId });
+      toast.error("Failed to create product!", { id: toastId });
       console.error("Failed to add product:", error);
     }
   };
@@ -128,17 +141,23 @@ const AddProduct = ({
             )}
           </div>
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="image">Product Image URL</Label>
+          <Label htmlFor="imagesString">
+            Product Image URLs (comma-separated)
+          </Label>
           <Input
-            id="image"
-            {...register("image")}
-            placeholder="Enter product image"
+            id="imagesString"
+            {...register("imagesString")}
+            placeholder="e.g. https://image1.jpg, https://image2.jpg"
           />
-          {errors.image && (
-            <p className="text-sm text-red-500">{errors.image.message}</p>
+          {errors.imagesString && (
+            <p className="text-sm text-red-500">
+              {errors.imagesString.message}
+            </p>
           )}
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
           <Textarea
@@ -164,16 +183,47 @@ const AddProduct = ({
               <p className="text-sm text-red-500">{errors.quantity.message}</p>
             )}
           </div>
-          <div className="flex items-center justify-end space-x-2 pt-7">
-            <Switch
-              id="inStock"
-              checked={inStockValue}
-              onCheckedChange={(checked) => setValue("inStock", checked)}
+
+          <div className="space-y-2">
+            <Label htmlFor="rating">Rating</Label>
+            <Input
+              id="rating"
+              type="number"
+              step="0.1"
+              min="0"
+              max="5"
+              {...register("rating", { valueAsNumber: true })}
             />
-            <Label htmlFor="inStock">
-              {inStockValue ? "In Stock" : "Out of Stock"}
-            </Label>
+            {errors.rating && (
+              <p className="text-sm text-red-500">{errors.rating.message}</p>
+            )}
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="totalReviews">Total Reviews</Label>
+          <Input
+            id="totalReviews"
+            type="number"
+            min="0"
+            {...register("totalReviews", { valueAsNumber: true })}
+          />
+          {errors.totalReviews && (
+            <p className="text-sm text-red-500">
+              {errors.totalReviews.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex items-center justify-end space-x-2 pt-4">
+          <Switch
+            id="inStock"
+            checked={inStockValue}
+            onCheckedChange={(checked) => setValue("inStock", checked)}
+          />
+          <Label htmlFor="inStock">
+            {inStockValue ? "In Stock" : "Out of Stock"}
+          </Label>
         </div>
 
         <div className="flex justify-end gap-2 pt-4">

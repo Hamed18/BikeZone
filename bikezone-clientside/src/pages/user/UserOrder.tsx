@@ -12,7 +12,8 @@ import { TOrder } from "@/types";
 import { ApiError } from "@/types/global.type";
 import { TableIcon } from "lucide-react";
 import moment from "moment";
-import { Link } from "react-router-dom"; // or import from 'next/link' if using Next.js
+import { Link } from "react-router-dom";
+import HeaderPath from "../admin/header/HeaderPath";
 
 const UserOrder = () => {
   const {
@@ -55,14 +56,15 @@ const UserOrder = () => {
   }
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <>
+      <HeaderPath role="User" subPath="My Orders" />
+      <div className="px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-2xl font-bold">My Orders</h3>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-600">
           Total Orders: {userOrders?.data?.length}
         </div>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border mx-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -81,11 +83,6 @@ const UserOrder = () => {
                   <TableCell className="font-medium">{i + 1}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <img
-                        src={order.product.image}
-                        alt={order.product.name}
-                        className="w-10 h-10 object-cover rounded"
-                      />
                       <Link
                         to={`/product/${order.product._id}`}
                         className="hover:underline"
@@ -94,7 +91,9 @@ const UserOrder = () => {
                       </Link>
                     </div>
                   </TableCell>
-                  <TableCell className="text-center">{order?.orderQuantity || 1}</TableCell>
+                  <TableCell className="text-center">
+                    {order?.orderQuantity || 1}
+                  </TableCell>
                   <TableCell>
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${
@@ -122,7 +121,7 @@ const UserOrder = () => {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   );
 };
 

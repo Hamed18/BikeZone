@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { useGeSingletUserQuery } from "@/redux/features/user/userApi";
+import { Card } from "@/components/ui/card";
 
 const Checkout = () => {
   const user = useAppSelector(selectCurrentUser);
@@ -34,7 +35,7 @@ const Checkout = () => {
             name: product.data.name,
             price: product.data.price,
             quantity: 1,
-            image: product.data.image,
+            images: product.data.images,
           },
         ]);
       }
@@ -82,7 +83,7 @@ const Checkout = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-2">
-          <div className="bg-white rounded-lg shadow p-6">
+          <Card className="rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Your Order</h2>
 
             {cart.map((item) => (
@@ -91,9 +92,12 @@ const Checkout = () => {
                 className="flex items-center border-b py-4"
               >
                 <img
-                  src={item.image}
+                  src={
+                    item.images[0] ||
+                    "https://media.istockphoto.com/id/1300331505/vector/living-room-interior-comfortable-sofa-bookcase-chair-and-house-plants-vector-flat-style.jpg?s=612x612&w=0&k=20&c=KbIpj1QZ7FXfma9ELib4My6URwkuPU05gN20IRDG__c="
+                  }
                   alt={item.name}
-                  className="sm:w-20 sm:h-20 w-10 h-10 object-cover rounded mr-4 "
+                  className="sm:w-20 sm:h-20 w-10 h-10 object-cover rounded mr-4"
                 />
                 <div className="flex-1">
                   <h3 className="font-medium">{item.name}</h3>
@@ -127,17 +131,17 @@ const Checkout = () => {
                 </div>
               </div>
             ))}
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          </Card>
+          <Card className="rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">User Information</h2>
             <div>Name: {userData?.data?.name}</div>
             <div>Email: {userData?.data?.email}</div>
-          </div>
+          </Card>
         </div>
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow p-6 sticky top-4">
+          <Card className="rounded-lg shadow p-6 sticky top-4">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
             <div className="space-y-3">
@@ -159,8 +163,9 @@ const Checkout = () => {
               </div>
             </div>
 
-            <OrderCart cart={cart[0]} />
-          </div>
+            {/* <OrderCart cart={cart[0]} /> */}
+            {cart[0] && <OrderCart cart={cart[0]} />}
+          </Card>
         </div>
       </div>
     </div>

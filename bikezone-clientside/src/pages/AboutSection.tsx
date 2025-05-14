@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const AboutSection = () => {
   return (
-    <section className="bg-white py-12 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section className=" px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         {/* Images Column */}
         <div className="flex gap-4 sm:gap-6 order-1 lg:order-none">
@@ -11,14 +11,14 @@ const AboutSection = () => {
             <img
               src="https://i.ibb.co.com/hxNcCMP9/man-choosed-motorcycles-moto-shop-guy-black-jacket-man-helmet.jpg"
               alt="Motorcycle enthusiast"
-              className="w-full rounded-xl object-cover h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px]"
+              className="w-full rounded-md object-cover h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px]"
             />
           </div>
           <div className="w-1/2 relative mt-8 sm:mt-12 md:mt-16">
             <img
               src="https://i.ibb.co.com/zV4Hrw2v/old-motorcycle-with-helmet-outdoors.jpg"
               alt="Vintage motorcycle"
-              className="w-full rounded-xl object-cover h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px]"
+              className="w-full rounded-md object-cover h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px]"
             />
           </div>
         </div>
@@ -42,7 +42,7 @@ const AboutSection = () => {
             we're here to keep you rolling — wherever the road takes you.
           </p>
           <Link to="/about">
-            <Button className="w-full sm:w-auto">Learn More About Us</Button>
+            <Button className="">Learn More About Us</Button>
           </Link>
         </div>
       </div>

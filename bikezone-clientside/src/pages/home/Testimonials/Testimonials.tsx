@@ -51,8 +51,8 @@ const reviews: Review[] = [
 
 const Testimonials = () => {
   return (
-    <div>
-      <SectionTitle subtitle="Testimonial" title="What they say about us" />
+    <>
+      <SectionTitle subtitle="Testimonials" title="What Customers Are Saying" />
       <div className="featured-item bg-fixed text-center p-4 md:p-12">
         <Swiper
           spaceBetween={30}
@@ -100,7 +100,7 @@ const Testimonials = () => {
           ))}
         </Swiper>
       </div>
-    </div>
+    </>
   );
 };
 

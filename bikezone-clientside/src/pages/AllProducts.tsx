@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Filter, ChevronDown, X, RotateCcw } from "lucide-react";
+import { Search, Filter, ChevronDown, X, RotateCcw, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,19 +8,13 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import LoadAnimation from "@/components/menu/LoadAnimation";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { toast } from "sonner";
 import { TProduct } from "@/types";
 import SectionBanner from "@/components/SectionBanner/SectionBanner";
+import { Badge } from "@/components/ui/badge";
 
 const AllProducts = () => {
   const {
@@ -33,6 +27,8 @@ const AllProducts = () => {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
   // Calculate max price when data loads
   const products = productData?.data || [];
@@ -125,10 +121,21 @@ const AllProducts = () => {
     );
   }
 
+  // Pagination
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const currentProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <SectionBanner heading={"All Products"} subHeading={"All Products"} />
-      <div className="py-4 max-w-7xl mx-auto px-4">
+      <div className="py-12 max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-bold">Products</h3>
           {(searchTerm ||
@@ -248,60 +255,57 @@ const AllProducts = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product: TProduct) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {currentProducts.map((product: TProduct) => {
             return (
-              <Card
+              <div
                 key={product._id}
-                className="hover:shadow-lg transition-shadow h-full flex flex-col"
+                className="property-card group overflow-hidden rounded-md transition duration-300 relative border p-4 shadow-xl"
               >
-                <CardHeader className="p-0">
+                <div className="relative md:aspect-[4/3] w-full">
                   <img
-                    src={product.image || "https://via.placeholder.com/300x200"}
+                    src={
+                      product.images?.[0] || "https://via.placeholder.com/300"
+                    }
                     alt={product.name}
-                    className="w-full h-48 object-cover rounded-t-lg"
+                    className="w-full h-48 object-cover rounded-md"
                   />
-                </CardHeader>
-                <CardContent className="p-4 flex-grow">
-                  <CardTitle className="text-lg">{product.name}</CardTitle>
-                  <div className="mt-2 space-y-1">
-                    <p className="text-sm">
-                      <span className="font-medium">Brand:</span>{" "}
-                      {product.brand}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-medium">Category:</span>{" "}
-                      {product.category}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-medium">Price:</span> $
-                      {product.price.toFixed(2)}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-medium">Status:</span>
-                      <span
-                        className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
-                          product.inStock && product?.quantity > 0
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {product.inStock && product?.quantity > 0
-                          ? "In Stock"
-                          : "Out of Stock"}
-                      </span>
-                    </p>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                    {product.description}
-                  </p>
-                </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <Link to={`/product/${product._id}`} className="w-full">
+                </div>
+                <div className="flex items-center text-sm mb-2">
+                  <Badge
+                    variant="outline"
+                    className="text-xs px-2 py-0.5 mt-4 text-white dark:text-black bg-primary"
+                  >
+                    {product.category}
+                  </Badge>
+                </div>
+                <h3 className="font-medium text-lg line-clamp-1">
+                  {product.name}
+                </h3>
+                <div className="flex items-center gap-1 text-sm text-yellow-500 mt-1 mb-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      fill={
+                        i < Math.round(product.rating ?? 0) ? "#FACC15" : "none"
+                      }
+                      stroke="#FACC15"
+                    />
+                  ))}
+                  <span className="ml-2 text-muted-foreground">
+                    ({product.totalReviews})
+                  </span>
+                </div>
+                <div className="text-xl font-bold text-primary pb-4">
+                  ${product.price}
+                </div>
+                <div className="w-full gap-4">
+                  <Link to={`/product/${product._id}`}>
                     <Button className="w-full">View Details</Button>
                   </Link>
-                </CardFooter>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -316,6 +320,25 @@ const AllProducts = () => {
             </Button>
           </div>
         )}
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-6">
+          <Button
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Prev
+          </Button>
+          <span className="mx-4">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </>
   );

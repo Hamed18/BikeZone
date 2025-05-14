@@ -4,13 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  // DropdownMenuLabel,
-  // DropdownMenuPortal,
   DropdownMenuSeparator,
-  // DropdownMenuShortcut,
-  // DropdownMenuSub,
-  // DropdownMenuSubContent,
-  // DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
@@ -18,25 +12,28 @@ import { useGeSingletUserQuery } from "@/redux/features/user/userApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { Loader, LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const LoginMenu = () => {
   const user = useAppSelector(selectCurrentUser);
   const role: string | undefined = user?.role;
 
-  const {
-    data: userData,
-    isLoading: userLoading,
-  } = useGeSingletUserQuery(user?._id, {
-    refetchOnMountOrArgChange: true,
-  });
+  const { data: userData, isLoading: userLoading } = useGeSingletUserQuery(
+    user?._id,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     const toastId = toast.loading("Logging out...");
     dispatch(logout());
     toast.success("User Logout!", { id: toastId, duration: 5000 });
+    navigate("/login");
   };
 
   return (
@@ -58,14 +55,6 @@ const LoginMenu = () => {
               Dashboard
             </DropdownMenuItem>
           </Link>
-          {/* <DropdownMenuItem>
-            Order
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 

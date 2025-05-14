@@ -6,7 +6,7 @@ interface SectionTitleProps {
 }
 const SectionTitle = ({ subtitle, title }: SectionTitleProps) => {
   return (
-    <div className="text-center sm:py-20 py-10 font-semibold">
+    <div className="text-center pt-14 pb-12  font-semibold">
       <div className="flex justify-center items-center gap-2 md:text-lg uppercase">
         <BiMenuAltRight className="text-[#E81938] " />
         {subtitle}

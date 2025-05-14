@@ -7,16 +7,17 @@ import AdminDash from "@/pages/admin/AdminDash";
 import ManageOrders from "@/pages/admin/ManageOrders";
 import ManageProducts from "@/pages/admin/ManageProducts";
 import ManageUsers from "@/pages/admin/ManageUsers";
-// import AllProducts2 from "@/pages/AllProduct2";
 import AllProducts from "@/pages/AllProducts";
 import Checkout from "@/pages/Checkout";
 import ErrorPage from "@/pages/ErrorPage/ErrorPage";
+import Faq from "@/pages/Faq/Faq";
 import Contact from "@/pages/home/Contact/Contact";
 import Home from "@/pages/home/Home";
 import ProductDetails from "@/pages/home/Product/ProductDetails";
 import Login from "@/pages/Login";
 import OrderDetails from "@/pages/order/Order";
 import OrderVerification from "@/pages/order/VerifyOrder";
+import Privacy from "@/pages/Privacy/Privacy";
 import Register from "@/pages/Register";
 import UserDash from "@/pages/user/UserDash";
 import UserOrder from "@/pages/user/UserOrder";
@@ -42,8 +43,16 @@ export const routes = createBrowserRouter([
         element: <Contact />,
       },
       {
-        path: "/products/",
+        path: "/products",
         element: <AllProducts />,
+      },
+      {
+        path: "privacy",
+        element: <Privacy />,
+      },
+      {
+        path: "faq",
+        element: <Faq />,
       },
       {
         path: "/product/:productId",
@@ -83,6 +92,10 @@ export const routes = createBrowserRouter([
         path: "manage-orders",
         element: <ManageOrders />,
       },
+      {
+        path: "profile",
+        element: <UserProfile />,
+      },
     ],
   },
   {
@@ -114,6 +127,11 @@ export const routes = createBrowserRouter([
         element: <OrderVerification />,
       },
     ],
+  },
+
+  {
+    path: "/verifyRequest",
+    element: <OrderVerification />,
   },
 
   {

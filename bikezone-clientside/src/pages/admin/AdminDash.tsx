@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { useGetOrdersQuery } from "@/redux/features/order/order";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
-import { Link } from "react-router-dom";
 import { TOrder, TProduct } from "@/types";
 import { TUser } from "@/types/global.type";
 import LoadAnimation from "@/components/menu/LoadAnimation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart, PieChart } from "@/components/ui/charts";
+import HeaderPath from "./header/HeaderPath";
 
 const AdminDash = () => {
   const { data: allOrders, isLoading: orderLoading } =
@@ -15,7 +16,11 @@ const AdminDash = () => {
   const { data: users, isLoading: userLoading } =
     useGetAllUsersQuery(undefined);
 
-  // Calculate order status counts
+  if (orderLoading || productLoading || userLoading) {
+    return <LoadAnimation />;
+  }
+
+  // Order status counts
   const orderStatusCounts = {
     total: allOrders?.data?.length || 0,
     paid:
@@ -35,7 +40,7 @@ const AdminDash = () => {
         .length || 0,
   };
 
-  // Calculate user status counts
+  // User status counts
   const userStatusCounts = {
     total: users?.data?.length || 0,
     active:
@@ -44,103 +49,181 @@ const AdminDash = () => {
       users?.data?.filter((user: TUser) => user.isActive === false).length || 0,
   };
 
-  if (orderLoading || productLoading || userLoading) {
-    return <LoadAnimation />;
-  }
+  // Product stock status counts
+  const productStatusCounts = {
+    total: productData?.data?.length || 0,
+    inStock:
+      productData?.data?.filter((product: TProduct) => product.inStock)
+        .length || 0,
+    outOfStock:
+      productData?.data?.filter((product: TProduct) => !product.inStock)
+        .length || 0,
+  };
+  const barChartProductData = {
+    labels: ["Products"],
+    datasets: [
+      {
+        label: "In Stock",
+        data: [productStatusCounts.inStock],
+        backgroundColor: "#3b82f6",
+      },
+      {
+        label: "Out of Stock",
+        data: [productStatusCounts.outOfStock],
+        backgroundColor: "#f59e0b",
+      },
+    ],
+  };
+  const barChartData = {
+    labels: ["Users"],
+    datasets: [
+      {
+        label: "Active",
+        data: [userStatusCounts.active],
+        backgroundColor: "#10b981",
+      },
+      {
+        label: "Inactive",
+        data: [userStatusCounts.inactive],
+        backgroundColor: "#ef4444",
+      },
+    ],
+  };
+
+  const pieChartData = {
+    labels: ["Cancelled", "Delivered", "Paid", "Pending", "Shipped"],
+    datasets: [
+      {
+        data: [
+          orderStatusCounts.cancelled,
+          orderStatusCounts.delivered,
+          orderStatusCounts.paid,
+          orderStatusCounts.pending,
+          orderStatusCounts.shipped,
+        ],
+        backgroundColor: ["red", "#f59e0b", "#10b981", "#3b82f6", "#3b8336"],
+        borderWidth: 0,
+      },
+    ],
+  };
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <>
+      <HeaderPath role="Admin" subPath="Dashboard" />
+      <div className="px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h3 className="text-2xl font-bold">Admin Dashboard</h3>
-        <Link to="/">
-          <Button className="gap-2">Go To Home</Button>
-        </Link>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        {/* Total Orders Card */}
-        <div className="rounded-lg border p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h4 className="text-lg font-semibold">Total Orders</h4>
-            <span className="text-2xl font-bold">
-              {orderStatusCounts.total}
-            </span>
-          </div>
-          <div className="mt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Paid</span>
-              <span className="font-medium">{orderStatusCounts.paid}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Delivered</span>
-              <span className="font-medium">{orderStatusCounts.delivered}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Cancelled</span>
-              <span className="font-medium">{orderStatusCounts.cancelled}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Pending</span>
-              <span className="font-medium">{orderStatusCounts.pending}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Shipped</span>
-              <span className="font-medium">{orderStatusCounts.shipped}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Total Users Card */}
-        <div className="rounded-lg border p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h4 className="text-lg font-semibold">Total Users</h4>
-            <span className="text-2xl font-bold">{userStatusCounts.total}</span>
-          </div>
-          <div className="mt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-green-600">Active</span>
-              <span className="font-medium">{userStatusCounts.active}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-red-600">Inactive</span>
-              <span className="font-medium">{userStatusCounts.inactive}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Total Products Card */}
-        <div className="rounded-lg border p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h4 className="text-lg font-semibold">Total Products</h4>
-            <span className="text-2xl font-bold">
-              {productData?.data?.length || 0}
-            </span>
-          </div>
-          <div className="mt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">In Stock</span>
-              <span className="font-medium">
-                {productData?.data?.filter(
-                  (product: TProduct) => product.inStock
-                ).length || 0}
+      <div className="p-4">
+        {" "}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Card className="rounded-lg border p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg font-semibold">Total Orders</h4>
+              <span className="text-2xl font-bold">
+                {orderStatusCounts.total}
               </span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Out of Stock</span>
-              <span className="font-medium">
-                {productData?.data?.filter(
-                  (product: TProduct) => !product.inStock
-                ).length || 0}
+            <div className="mt-4 space-y-2 text-sm">
+              {["Paid", "Delivered", "Cancelled", "Pending", "Shipped"].map(
+                (status) => (
+                  <div key={status} className="flex justify-between">
+                    <span className="text-gray-600">{status}</span>
+                    <span className="font-medium">
+                      {
+                        orderStatusCounts[
+                          status.toLowerCase() as keyof typeof orderStatusCounts
+                        ]
+                      }
+                    </span>
+                  </div>
+                )
+              )}
+            </div>
+          </Card>
+
+          {/* Total Users Card */}
+          <Card className="rounded-lg border p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg font-semibold">Total Users</h4>
+              <span className="text-2xl font-bold">
+                {userStatusCounts.total}
               </span>
             </div>
-          </div>
+            <div className="mt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-green-600">Active</span>
+                <span className="font-medium">{userStatusCounts.active}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-red-600">Inactive</span>
+                <span className="font-medium">{userStatusCounts.inactive}</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Total Products Card */}
+          <Card className="rounded-lg border p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg font-semibold">Total Products</h4>
+              <span className="text-2xl font-bold">
+                {productStatusCounts.total}
+              </span>
+            </div>
+            <div className="mt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">In Stock</span>
+                <span className="font-medium">
+                  {productStatusCounts.inStock}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Out of Stock</span>
+                <span className="font-medium">
+                  {productStatusCounts.outOfStock}
+                </span>
+              </div>
+            </div>
+          </Card>
+        </div>
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Product Stock Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px]">
+              <BarChart data={barChartProductData} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Users Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px]">
+              <BarChart data={barChartData} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Request Status Distribution</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px]">
+              <PieChart data={pieChartData} />
+            </CardContent>
+          </Card>
+
+          {/* Placeholder for future chart (e.g., orders, users, etc.) */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Coming Soon</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px] flex items-center justify-center text-gray-500">
+              Another chart or data widget
+            </CardContent>
+          </Card>
         </div>
       </div>
-
-      {/* <div className="rounded-md border p-4">
-        <p className="text-gray-600">More dashboard metrics and charts can be added here</p>
-      </div> */}
-    </div>
+    </>
   );
 };
 

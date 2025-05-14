@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,14 +16,13 @@ import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 import { productSchema } from "@/schemas/productForm.schema";
 import { toast } from "sonner";
-
-type TProductFormData = z.infer<typeof productSchema>;
-import { useEffect } from "react";
 import {
   useUpdateProductMutation,
   useGetSingleProductQuery,
 } from "@/redux/features/product/productApi";
 import LoadAnimation from "@/components/menu/LoadAnimation";
+
+type TProductFormData = z.infer<typeof productSchema>;
 
 const UpdateProduct = ({
   setIsUpdateProduct,
@@ -50,15 +51,17 @@ const UpdateProduct = ({
 
   useEffect(() => {
     if (product) {
-      // Pre-fill the form with existing product data
-      setValue("name", product.data.name);
-      setValue("brand", product.data.brand);
-      setValue("image", product.data.image);
-      setValue("price", product.data.price);
-      setValue("category", product.data.category);
-      setValue("description", product.data.description);
-      setValue("quantity", product.data.quantity);
-      setValue("inStock", product.data.inStock);
+      const p = product.data;
+      setValue("name", p.name);
+      setValue("brand", p.brand);
+      setValue("imagesString", p.images?.join(", ") || "");
+      setValue("price", p.price);
+      setValue("category", p.category);
+      setValue("description", p.description);
+      setValue("quantity", p.quantity);
+      setValue("inStock", p.inStock);
+      setValue("rating", p.rating || 0);
+      setValue("totalReviews", p.totalReviews || 0);
     }
   }, [product, setValue]);
 
@@ -66,12 +69,21 @@ const UpdateProduct = ({
 
   const onSubmit = async (data: TProductFormData) => {
     const toastId = toast.loading("Updating...");
+
+    const updatedProduct = {
+      ...data,
+      images: data.imagesString
+        ? data.imagesString.split(",").map((url) => url.trim())
+        : [],
+    };
+    delete (updatedProduct as any).imagesString;
+
     try {
-      const result = await updateProduct({
+      await updateProduct({
         id: productId,
-        data,
+        data: updatedProduct,
       }).unwrap();
-      console.log("Product updated successfully:", result);
+
       toast.success("Product Updated!", { id: toastId });
       setIsUpdateProduct(false);
       refetch();
@@ -80,6 +92,7 @@ const UpdateProduct = ({
       console.error("Failed to update product:", error);
     }
   };
+
   if (isProductFetching) {
     return <LoadAnimation />;
   }
@@ -93,22 +106,14 @@ const UpdateProduct = ({
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="name">Product Name</Label>
-            <Input
-              id="name"
-              {...register("name")}
-              placeholder="Enter product name"
-            />
+            <Input id="name" {...register("name")} />
             {errors.name && (
               <p className="text-sm text-red-500">{errors.name.message}</p>
             )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="brand">Brand</Label>
-            <Input
-              id="brand"
-              {...register("brand")}
-              placeholder="Enter brand name"
-            />
+            <Input id="brand" {...register("brand")} />
             {errors.brand && (
               <p className="text-sm text-red-500">{errors.brand.message}</p>
             )}
@@ -134,7 +139,7 @@ const UpdateProduct = ({
             <select
               id="category"
               {...register("category")}
-              className="block w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
               <option value="">Select category</option>
               <option value="Mountain">Mountain</option>
@@ -147,24 +152,22 @@ const UpdateProduct = ({
             )}
           </div>
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="image">Product Image URL</Label>
-          <Input
-            id="image"
-            {...register("image")}
-            placeholder="Enter product image"
-          />
-          {errors.image && (
-            <p className="text-sm text-red-500">{errors.image.message}</p>
+          <Label htmlFor="imagesString">
+            Product Image URLs (comma-separated)
+          </Label>
+          <Input id="imagesString" {...register("imagesString")} />
+          {errors.imagesString && (
+            <p className="text-sm text-red-500">
+              {errors.imagesString.message}
+            </p>
           )}
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            {...register("description")}
-            placeholder="Enter product description"
-          />
+          <Textarea id="description" {...register("description")} />
           {errors.description && (
             <p className="text-sm text-red-500">{errors.description.message}</p>
           )}
@@ -176,23 +179,51 @@ const UpdateProduct = ({
             <Input
               id="quantity"
               type="number"
-              min="0"
               {...register("quantity", { valueAsNumber: true })}
             />
             {errors.quantity && (
               <p className="text-sm text-red-500">{errors.quantity.message}</p>
             )}
           </div>
-          <div className="flex items-center justify-end space-x-2 pt-7">
-            <Switch
-              id="inStock"
-              checked={inStockValue}
-              onCheckedChange={(checked) => setValue("inStock", checked)}
+          <div className="space-y-2">
+            <Label htmlFor="rating">Rating</Label>
+            <Input
+              id="rating"
+              type="number"
+              step="0.1"
+              min="0"
+              max="5"
+              {...register("rating", { valueAsNumber: true })}
             />
-            <Label htmlFor="inStock">
-              {inStockValue ? "In Stock" : "Out of Stock"}
-            </Label>
+            {errors.rating && (
+              <p className="text-sm text-red-500">{errors.rating.message}</p>
+            )}
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="totalReviews">Total Reviews</Label>
+          <Input
+            id="totalReviews"
+            type="number"
+            {...register("totalReviews", { valueAsNumber: true })}
+          />
+          {errors.totalReviews && (
+            <p className="text-sm text-red-500">
+              {errors.totalReviews.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex items-center justify-end space-x-2 pt-4">
+          <Switch
+            id="inStock"
+            checked={inStockValue}
+            onCheckedChange={(checked) => setValue("inStock", checked)}
+          />
+          <Label htmlFor="inStock">
+            {inStockValue ? "In Stock" : "Out of Stock"}
+          </Label>
         </div>
 
         <div className="flex justify-end gap-2 pt-4">

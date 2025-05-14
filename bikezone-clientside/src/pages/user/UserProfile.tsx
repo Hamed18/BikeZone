@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import LoadAnimation from "@/components/menu/LoadAnimation";
 import { ApiError } from "@/types/global.type";
+import HeaderPath from "../admin/header/HeaderPath";
 
 const UserProfile = () => {
   const currentData = useAppSelector(selectCurrentUser);
@@ -132,8 +133,9 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-4xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <>
+      <HeaderPath subPath="Profile" />
+      <div className="px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <CardTitle className="text-2xl font-bold">User Profile</CardTitle>
 
         {isEditing ? (
@@ -163,9 +165,9 @@ const UserProfile = () => {
         )}
       </div>
 
-      <Card>
+      <Card className="mx-4">
         <CardHeader>
-          <h4 className="text-lg font-semibold">User Information</h4>
+          <h4 className="text-2xl font-bold text-center">User Information</h4>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 md:grid-cols-2">
@@ -282,7 +284,7 @@ const UserProfile = () => {
           )}
         </CardFooter>
       </Card>
-    </div>
+    </>
   );
 };
 

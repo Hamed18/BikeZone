@@ -1,86 +1,59 @@
-import LoadAnimation from "@/components/menu/LoadAnimation";
 import { Button } from "@/components/ui/button";
-import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
+import { Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { TProduct } from "@/types";
-import { Info } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Card } from "@/components/ui/card";
 
-const ProductCard = () => {
-  const { data, isLoading } = useGetAllProductsQuery(undefined);
-
-  if (isLoading) {
-    return <LoadAnimation />;
-  }
+interface ProductCardProps {
+  product: TProduct;
+}
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {data?.data?.slice(0, 3).map((product: TProduct) => (
-          <div className=" max-w-md w-full shadow-xl" key={product?._id}>
-            <div className="relative">
-              <img
-                alt="Banner Profile"
-                src={product.image}
-                className="w-full rounded-t-2xl h-52"
-              />
-
-              <div className="absolute bg-black text-base text-white flex justify-center items-center bottom-0 left-2/4 transform -translate-x-1/2 translate-y-1/2 w-20 h-20 rounded-full border-2 font-extrabold border-white">
-                ${product.price}
-              </div>
-            </div>
-
-            <div className="p-5">
-              <p className="text-gray-400 text-base mt-5 ">
-                <p>
-                  <span
-                    className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
-                      product.inStock && product?.quantity > 0
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {product.inStock && product?.quantity > 0
-                      ? "In Stock: "
-                      : "Out of Stock: "}
-                    {product?.quantity}
-                  </span>
-                </p>
-              </p>
-              <Link to={`/product/${product._id}`}>
-                <p className="text-2xl font-medium mt-3 hover:underline">
-                  {product.name}
-                </p>
-              </Link>
-
-              <div className="flex justify-start gap-5 items-center py-2 font-bold text-gray-700">
-                <li className="list-inside  list-disc  text-base">
-                  Brand : {product.brand}
-                </li>
-                <p className=" text-base">Category : {product.category}</p>
-              </div>
-              <div className="flex justify-center">
-                <Link to={`/product/${product?._id}`}>
-                  <Button
-                    style={{
-                      backgroundColor: "#0000",
-                      color: "black",
-                      border: "2px solid black",
-                    }}
-                  >
-                    <Info />
-                    View Details
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+    <Card className="property-card group overflow-hidden rounded-md transition duration-300 relative border p-4 shadow-xl">
+      <div className="relative md:aspect-[4/3] w-full">
+        <img
+          src={
+            product.images?.[0] ||
+            "https://media.istockphoto.com/id/1300331505/vector/living-room-interior-comfortable-sofa-bookcase-chair-and-house-plants-vector-flat-style.jpg"
+          }
+          alt={product.name}
+          className="w-full h-48 object-cover rounded-md"
+        />
       </div>
-      <div className="flex justify-center items-center mx-auto py-10">
-        <Link to="/products/">
-          <Button>View All</Button>
+      <div className="px-4">
+        <div className="flex items-center text-sm mb-2">
+          <Badge
+            variant="outline"
+            className="text-xs px-2 py-0.5 mt-4 text-white dark:text-black bg-primary"
+          >
+            {product.category}
+          </Badge>
+        </div>
+        <h3 className="font-medium text-lg line-clamp-1">{product.name}</h3>
+        <div className="flex items-center gap-1 text-sm text-yellow-500 mt-1 mb-2">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              size={16}
+              fill={i < Math.round(product.rating ?? 0) ? "#FACC15" : "none"}
+              stroke="#FACC15"
+            />
+          ))}
+          <span className="ml-2 text-muted-foreground">
+            ({product.totalReviews})
+          </span>
+        </div>
+        <div className="text-xl font-bold text-primary pb-4">
+          ${product.price}
+        </div>
+      </div>
+      <div className=" w-full gap-4 px-4">
+        <Link to={`/product/${product._id}`}>
+          <Button className="w-full">View Details</Button>
         </Link>
       </div>
-    </>
+    </Card>
   );
 };
 

@@ -1,89 +1,95 @@
-import {
-  FaFacebookSquare,
-  FaTwitterSquare,
-  FaGooglePlusSquare,
-} from "react-icons/fa";
 import { Link } from "react-router-dom";
-type SocialMediaLink = {
-  to: string;
-  icon: React.ReactNode;
-  alt: string;
-};
-
-import logo from "@/assets/logo-white.svg";
-import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
+import { Facebook, Twitter, Github, Linkedin } from "lucide-react";
+import BrandLogo from "../BrandLogo";
+import { SelectSeparator } from "../ui/select";
 
 const Footer = () => {
-  const socialLinks: SocialMediaLink[] = [
-    {
-      to: "/",
-      icon: <FaFacebookSquare className="text-2xl" />,
-      alt: "Facebook",
-    },
-    { to: "/", icon: <FaTwitterSquare className="text-2xl" />, alt: "Twitter" },
-    {
-      to: "/",
-      icon: <FaGooglePlusSquare className="text-2xl" />,
-      alt: "Google+",
-    },
-  ];
   return (
-    <div className="bg-black text-white">
-      <div className="max-w-7xl md:py-14 py-8 mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {/* Logo Section */}
-          <div className="space-y-3">
-            {/* Logo */}
-            <div className="flex items-center gap-2">
-              <img
-                src={logo}
-                alt="logo"
-                className="w-10 h-10 md:w-14 md:h-14"
-              />
-              <h2 className="flex flex-col justify-center uppercase">
-                <span className="font-bold text-xl md:text-3xl">Bike Zone</span>
-                <span className="-mt-1 font-normal text-xs md:text-sm tracking-widest">
-                  Upgrade your ride
-                </span>
-              </h2>
-            </div>
+    <footer className="bg-black text-white py-10">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start text-center md:text-left">
+          <div className="flex justify-center md:justify-start">
+            <BrandLogo theme="dark" />
           </div>
-          <div className="flex flex-col sm:items-center">
-            <div>
-              <p className="text-white font-bold sm:block">CONTACT</p>
-              <ul className="my-2 space-y-1">
-                <li className="flex items-center gap-1">
-                  <MdEmail /> info@bikeshop.com{" "}
-                </li>
-                <li className="flex items-center gap-1">
-                  <MdPhone /> +61 400 000 000{" "}
-                </li>
-                <li className="flex items-center gap-1">
-                  <MdLocationOn /> Dhaka,Bangladesh{" "}
-                </li>
-              </ul>
-            </div>
+          <div className="flex flex-col gap-2 items-center">
+            <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+              Explore
+            </h3>
+            <nav className="flex flex-col gap-2 text-sm text-gray-400">
+              <Link to="/" className="hover:text-white transition">
+                Home
+              </Link>
+              <Link to="/about" className="hover:text-white transition">
+                About
+              </Link>
+              <Link to="/products" className="hover:text-white transition">
+                Products
+              </Link>
+              <Link to="/faq" className="hover:text-white transition">
+                Faq
+              </Link>
+              <Link to="/contact" className="hover:text-white transition">
+                Contact
+              </Link>
+              <Link to="/privacy" className="hover:text-white transition">
+                Privacy
+              </Link>
+            </nav>
           </div>
-          {/* Social Media Section */}
-          <div className="flex sm:flex-row flex-col sm:justify-end sm:gap-4 gap-2">
-            <p className="text-white font-bold sm:block">SOCIAL MEDIA</p>
-            <div className="flex">
-              {socialLinks.map((link, index) => (
-                <Link key={index} to={link.to} className="hover:text-primary">
-                  {link.icon}
-                </Link>
-              ))}
-            </div>
+
+          {/* Column 3: Socials */}
+          <div className="flex justify-center md:justify-end gap-6">
+            <a
+              href="https://www.facebook.com/jannatulfee"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              title="Facebook"
+              className="hover:text-white transition"
+            >
+              <Facebook size={20} />
+            </a>
+            <a
+              href="https://x.com/jannatul_zz"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter"
+              title="Twitter"
+              className="hover:text-white transition"
+            >
+              <Twitter size={20} />
+            </a>
+            <a
+              href="https://github.com/jannat710"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              title="GitHub"
+              className="hover:text-white transition"
+            >
+              <Github size={20} />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/jannatul38/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+              className="hover:text-white transition"
+            >
+              <Linkedin size={20} />
+            </a>
           </div>
         </div>
+        <SelectSeparator className="my-5" />
+        {/* Copyright */}
+        <div className=" text-center text-sm text-gray-400">
+          &copy; {new Date().getFullYear()}{" "}
+          <span className="text-white font-medium">Jannatul Ferdous</span> | All
+          rights reserved.
+        </div>
       </div>
-      {/* Copyright Section */}
-      <div className="text-center sm:text-base text-xs p-2 bg-gray-900">
-        <p className="text-white opacity-90 w-full ">
-          Copyright © {new Date().getFullYear()}. All Rights Reserved.
-        </p>
-      </div>
-    </div>
+    </footer>
   );
 };
 

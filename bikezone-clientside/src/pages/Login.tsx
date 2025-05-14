@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import logo from "@/assets/logo.png"; // Make sure to import your logo
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +18,7 @@ import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { useAppDispatch } from "@/redux/hooks";
 import { setUser } from "@/redux/features/auth/authSlice";
+import { Typewriter } from "react-simple-typewriter";
 
 const formSchema = z.object({
   email: z.string().min(3, {
@@ -45,7 +45,7 @@ const Login = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const toastId = toast.loading("User Login....");
-  
+
     try {
       const res = await loginUser(data).unwrap();
       dispatch(setUser({ user: res.data, token: res.token }));
@@ -56,18 +56,18 @@ const Login = () => {
       } else {
         navigate("/");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Login error:", error);
-      
+
       // Handle different error structures
       let errorMessage = "Login failed. Please try again.";
-  
+
       // Check for Zod validation errors
-      if (error?.data?.error?.name === 'ZodError') {
+      if (error?.data?.error?.name === "ZodError") {
         const firstError = error.data.error.issues[0];
         errorMessage = firstError.message || "Validation error";
-      } 
+      }
       // Check for the specific stringified JSON case
       else if (error?.data?.message) {
         try {
@@ -85,31 +85,59 @@ const Login = () => {
       else if (error?.data?.issues?.length > 0) {
         errorMessage = error.data.issues[0].message;
       }
-  
+
       toast.error(errorMessage, { id: toastId });
+    }
+  };
+  const handleCredentialFill = (role: "admin" | "customer") => {
+    if (role === "admin") {
+      form.setValue("email", "admin@gmail.com");
+      form.setValue("password", "1234");
+    } else if (role === "customer") {
+      form.setValue("email", "user@gmail.com");
+      form.setValue("password", "1234");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       {/* Login Form */}
       <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-sm border">
+        <div className="max-w-md mx-auto  p-8 rounded-lg shadow-sm border">
           <div className="">
-            <div className="flex items-center justify-center gap-2 border border-black bg-gray-200 p-2 rounded-xl">
-              <img
-                src={logo}
-                alt="logo"
-                className="w-10 h-10 md:w-16 md:h-16"
-              />
-              <h2 className="flex flex-col justify-center uppercase">
-                <span className="font-bold text-xl md:text-3xl">Bike Zone</span>
-                <span className="-mt-1 font-normal text-xs md:text-sm tracking-widest">
-                  Upgrade your ride
-                </span>
-              </h2>
+            <div className="flex items-center justify-center gap-2 p-2 rounded-xl">
+              <div className="text-3xl font-semibold flex justify-center items-center gap-2 pb-5">
+                Login to{" "}
+                <h1 className="font-bold text-3xl tracking-widest">
+                  <span className="text-[#E81938]">Bike</span>
+                  <span className="inline-block w-1" />
+                  <Typewriter
+                    words={["Zone"]}
+                    loop={0}
+                    cursor
+                    cursorStyle="_"
+                    typeSpeed={100}
+                    deleteSpeed={50}
+                    delaySpeed={1000}
+                  />
+                </h1>
+              </div>
             </div>
-            <h1 className="text-lg font-bold text-center my-8">Login</h1>
+          </div>
+          <h2 className="font-semibold pb-1">Quick Test Login:</h2>
+          <div className="grid grid-cols-3 gap-5 pb-5">
+            <Button
+              variant={"outline"}
+              onClick={() => handleCredentialFill("admin")}
+            >
+              Admin
+            </Button>
+            <Button
+              variant={"outline"}
+              onClick={() => handleCredentialFill("customer")}
+            >
+              User
+            </Button>
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -145,11 +173,7 @@ const Login = () => {
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <Loader className="animate-spin" /> logging...

@@ -22,6 +22,8 @@ import UpdateProduct from "./UpdateProduct";
 import { toast } from "sonner";
 import DeleteConfirmationDialog from "@/components/others/DeleteConfirmationDialog";
 import { Link } from "react-router-dom";
+import HeaderPath from "./header/HeaderPath";
+import { Card } from "@/components/ui/card";
 
 const ManageProducts = () => {
   const {
@@ -86,9 +88,9 @@ const ManageProducts = () => {
   }
 
   return (
-    <div className="p-4 md:p-6">
-      {/* Header with title and Add Product button */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <>
+      <HeaderPath role="Admin" subPath="Manage Products" />
+      <div className="px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-2xl font-bold">Manage Products</h3>
 
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -103,7 +105,7 @@ const ManageProducts = () => {
       </div>
 
       {/* Search bar */}
-      <div className="relative mb-6 max-w-md">
+      <div className="relative mb-6 max-w-md mx-4">
         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search products..."
@@ -114,7 +116,7 @@ const ManageProducts = () => {
       </div>
 
       {/* Products table */}
-      <div className="rounded-md border">
+      <Card className="rounded-md border m-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -147,32 +149,34 @@ const ManageProducts = () => {
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {product.inStock && product?.quantity > 0 ? "In Stock" : "Out of Stock"}
+                    {product.inStock && product?.quantity > 0
+                      ? "In Stock"
+                      : "Out of Stock"}
                   </span>
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button
                       title="Edit"
-                      variant="destructive"
                       size="icon"
+                      variant={"outline"}
                       onClick={() => handleEditClick(product._id)}
                     >
-                      <Edit className="h-4 w-4 text-green-200" />
+                      <Edit className="h-4 w-4" />
                     </Button>
 
                     <Button
                       onClick={() => handleDeleteClick(product)}
                       title="Delete"
-                      variant="outline"
                       size="icon"
+                      variant={"outline"}
                     >
-                      <Trash2 className="h-4 w-4 text-red-300" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
 
-                    <Link to={`/product/${product?._id}`} >
-                      <Button title="Details" variant="outline" size="icon">
-                        <Info className="h-4 w-4 text-blue-300" />
+                    <Link to={`/product/${product?._id}`}>
+                      <Button title="Details" variant={"outline"} size="icon">
+                        <Info className="h-4 w-4 " />
                       </Button>
                     </Link>
                   </div>
@@ -181,7 +185,7 @@ const ManageProducts = () => {
             ))}
           </TableBody>
         </Table>
-      </div>
+      </Card>
 
       {/* Update Product Dialog */}
       <Dialog
@@ -202,7 +206,7 @@ const ManageProducts = () => {
         onConfirm={handleDeleteConfirm}
         productName={productToDelete?.name || ""}
       />
-    </div>
+    </>
   );
 };
 
