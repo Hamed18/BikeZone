@@ -9,7 +9,7 @@ import SectionTitle from "@/components/SectionTitle/SectionTitle";
 
 const Discount = () => {
   return (
-    <div className="bg-white text-gray-800"> {/* Updated background here */}
+    <div className="bg-white text-gray-800"> 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         {/* Current Promotions */}
