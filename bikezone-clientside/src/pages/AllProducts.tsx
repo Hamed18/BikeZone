@@ -21,6 +21,7 @@ import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { toast } from "sonner";
 import { TProduct } from "@/types";
 import SectionBanner from "@/components/SectionBanner/SectionBanner";
+// import SectionTitle from "@/components/SectionTitle/SectionTitle";
 
 const AllProducts = () => {
   const {
@@ -129,8 +130,9 @@ const AllProducts = () => {
     <>
       <SectionBanner heading={"All Products"} subHeading={"All Products"} />
       <div className="py-4 max-w-7xl mx-auto px-4">
+        {/* <SectionTitle subtitle="Explore Latest Collection" title="Products" /> */}
+        <h2 className="my-4 font-bold text-3xl text-center">Products</h2>
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold">Products</h3>
           {(searchTerm ||
             selectedBrands.length > 0 ||
             selectedCategories.length > 0 ||
