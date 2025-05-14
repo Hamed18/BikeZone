@@ -11,7 +11,7 @@ userRouter.post(
   validateRequest(UserValidation.userValidationSchema),
   userController.createAdmin
 );
-userRouter.get("/", auth(USER_ROLE.admin), userController.getUser);
+userRouter.get("/", userController.getUser);
 userRouter.get("/:userId", userController.getSingleUser);
 userRouter.put("/:userId", userController.updateUser);
 userRouter.patch(
