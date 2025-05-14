@@ -200,3 +200,31 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+.delay-100 {
+  animation-delay: 0.2s;
+}
+.delay-200 {
+  animation-delay: 0.4s;
+}
+
+/* Glow effect for subtitle only */
+.glow-text-sm {
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.7),
+    0 0 12px rgba(255, 255, 255, 0.5);
+}
